@@ -22,7 +22,7 @@ const styles = theme => ({
 function Login({ ...props }) {
     const { show, classes, saveClick } = props
 
-    const { control, handleSubmit } = useForm({
+    const { control, handleSubmit , register} = useForm({
         defaultValues: {
             email: '',
             password: ''
@@ -43,41 +43,11 @@ function Login({ ...props }) {
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container style={{width: "50%", margin: "auto", bacground: "white"}}>
+                <Grid container style={{ width: "50%", margin: "auto", bacground: "white" }}>
                     <ItemGrid sx={12} md={12}>
+                        <input type='text' ref={register} name='email'/>
+                        <input type='password' ref={register} name='password' />
 
-                        <Controller
-                            name="email"
-                            control={control}
-                            render={({ field }) => <TextField
-                                id="email"
-                                fullWidth={true}
-                                label="البريد الإلكتروني"
-                                {...field}
-                                type="email"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />}
-                        />
-                    </ItemGrid>
-                    <ItemGrid sx={12} md={12}>
-                        <Controller
-                            name="password"
-                            control={control}
-                            render={({ field }) => <TextField
-                                id="password"
-                                fullWidth={true}
-                                label="كلمة السر"
-                                {...field}
-                                type="password"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />}
-                        />
                     </ItemGrid>
                     <ItemGrid sx={12} md={12}>
 

@@ -4,11 +4,11 @@ function queryToString(queryParams) {
 }
 
 async function getAllUsers() {
-    try {
-        return await axios.get("/admin/users")
-    }catch(err) {
-        console.error(err)
-    }
+
+        try {
+            const resBody = await axios.get(`/admin/clients${params}`)
+            return resBody;
+        } catch (e) { }
 }
 
 // async function getAllUsers(pageNumber, pageSize, type) {
