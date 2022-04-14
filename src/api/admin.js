@@ -6,7 +6,7 @@ function queryToString(queryParams) {
 async function getAllUsers() {
 
         try {
-            const resBody = await axios.get(`/admin/clients${params}`)
+            const resBody = await axios.get(`/admin/users`)
             return resBody;
         } catch (e) { }
 }
