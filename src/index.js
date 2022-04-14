@@ -16,8 +16,7 @@ axios.defaults.baseURL = "http://localhost:3003"
 axios.interceptors.request.use(function (config) {
   if (config) {
     const state = getUserState();
-    // config.headers.authorization = `Bearer ${state.token}`
-    config.headers.authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjUzN2UwYzhjOWQxOTAzYzU1MmNmYzIiLCJpYXQiOjE2NDk2Mzk1MDMsImV4cCI6MTk2NDk2Mzk1MDN9.lAHzCmgjrl1GWRQvruXcORDOxDJ4M7S8CSxpAB2NJaA"
+    config.headers.authorization = `Bearer ${state.token}`
     config.headers['Access-Control-Allow-Origin'] = '*'
     
   }
