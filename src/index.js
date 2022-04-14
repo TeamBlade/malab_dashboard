@@ -11,7 +11,7 @@ import axios from "axios";
 import {getUserState} from "state/user"
 
 dotenv.config()
-axios.defaults.baseURL = "http://localhost:3003"
+axios.defaults.baseURL = "http://demos.smt.sa:3005"
 
 axios.interceptors.request.use(function (config) {
   if (config) {
