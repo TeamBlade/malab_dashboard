@@ -91,8 +91,8 @@ const TableList = ({ ...props }) => {
   const onSubmit = data => {
     console.log(data)
     const formData = new FormData();
-
-    formData.append("images", JSON.stringify(selectedRow));
+    for (const key of Object.keys(selectedRow))
+      formData.append("images", selectedRow[key]);
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("services", JSON.stringify(data.services.map(s => s.value)))
@@ -216,112 +216,112 @@ const TableList = ({ ...props }) => {
             <DialogContent>
               <Grid container>
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<TextField
-                    id="name"
-                    label="المدينة"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="name"
-                  register={register}
-                  setValue={setValue} />
+                  <RHFInput
+                    as={<TextField
+                      id="name"
+                      label="المدينة"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="name"
+                    register={register}
+                    setValue={setValue} />
                 </ItemGrid>
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<TextField
-                    id="description"
-                    label="المدينة"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="description"
-                  register={register}
-                  setValue={setValue} />
-                </ItemGrid>
-
-                <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<Select
-                    isMulti
-                    options={services}
-                />}
-                  rules={{ required: true }}
-                  name="services"
-                  register={register}
-                  setValue={setValue} />
+                  <RHFInput
+                    as={<TextField
+                      id="description"
+                      label="المدينة"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="description"
+                    register={register}
+                    setValue={setValue} />
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <Controller
-                  name="images"
-                  control={control}
-                  render={({ field }) => <input
-                    type="file"
-                    multiple='multiple'
-                    onChange={(e) =>{console.log(e.target.files); setSelectedRow(e.target.files)}}
-
-                  />}
-                />
+                  <RHFInput
+                    as={<Select
+                      isMulti
+                      options={services}
+                    />}
+                    rules={{ required: true }}
+                    name="services"
+                    register={register}
+                    setValue={setValue} />
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<TextField
-                    id="city"
-                    label="المدينة"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="city"
-                  register={register}
-                  setValue={setValue} />
+                  <Controller
+                    name="images"
+                    control={control}
+                    render={({ field }) => <input
+                      type="file"
+                      multiple='multiple'
+                      onChange={(e) => { console.log(e.target.files); setSelectedRow(e.target.files) }}
+
+                    />}
+                  />
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<TextField
-                    id="price"
-                    label="السعر"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="price"
-                  register={register}
-                  setValue={setValue} />
+                  <RHFInput
+                    as={<TextField
+                      id="city"
+                      label="المدينة"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="city"
+                    register={register}
+                    setValue={setValue} />
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
-                  as={<TextField
-                    id="type"
-                    label="النوع"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="type"
-                  register={register}
-                  setValue={setValue} />
+                  <RHFInput
+                    as={<TextField
+                      id="price"
+                      label="السعر"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="price"
+                    register={register}
+                    setValue={setValue} />
+                </ItemGrid>
+
+                <ItemGrid sx={12} md={6}>
+                  <RHFInput
+                    as={<TextField
+                      id="type"
+                      label="النوع"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="type"
+                    register={register}
+                    setValue={setValue} />
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={4}>
@@ -342,7 +342,7 @@ const TableList = ({ ...props }) => {
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
+                  <RHFInput
                     as={<TextField
                       id="dayEndTime"
                       label="زمن إنتهاء الوردية النهارية"
@@ -359,7 +359,7 @@ const TableList = ({ ...props }) => {
                 </ItemGrid>
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
+                  <RHFInput
                     as={<TextField
                       id="nightStartTime"
                       label="زمن بداية الوردية المسائية"
@@ -377,7 +377,7 @@ const TableList = ({ ...props }) => {
 
 
                 <ItemGrid sx={12} md={6}>
-                <RHFInput
+                  <RHFInput
                     as={<TextField
                       id="nightEndTime"
                       label="زمن إنتهاء الوردية المسائية"
