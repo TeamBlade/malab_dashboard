@@ -34,6 +34,7 @@ function Login({ ...props }) {
                 console.log(res.token)
                 setUserState({
                     email: res.email,
+                    isLogedIn: true,
                     isAdmin: res.type === "admin", token: res.token
                 })
             }

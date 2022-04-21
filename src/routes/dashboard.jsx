@@ -5,7 +5,7 @@ import PlaygroundTableList from "views/TableList/PlaygroundList.jsx";
 import ClientTableList from "views/TableList/clientsList.jsx";
 import OwnerTableList from "views/TableList/ownerlist.jsx";
 import ReservationTableList from "views/TableList/reservationlist.jsx";
-
+import React from "react";
 import Typography from "views/Typography/Typography.jsx";
 import Icons from "views/Icons/Icons.jsx";
 import Maps from "views/Maps/Maps.jsx";
@@ -18,10 +18,14 @@ import {
   BubbleChart,
   LocationOn,
   ExitToApp,
-  Notifications
+  Notifications,
+  Info
 } from "@material-ui/icons";
 import login from "../views/login";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { getUserState } from "../state/user";
 
+if(getUserState().)
 const dashboardRoutes = [
   {
     path: "/dashboard",
@@ -35,7 +39,7 @@ const dashboardRoutes = [
     sidebarName: "قائمه العملاء ",
     navbarName: "قائمه العملاء",
     icon: Person,
-    component: ClientTableList
+    component: <ProtectedRoute from='/clients'>ClientTableList</ProtectedRoute>
   },
   {
     path: "/owners",

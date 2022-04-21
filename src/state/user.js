@@ -1,7 +1,8 @@
 let UserState = {
     email: null,
     token: null,
-    isAdmin: false
+    isAdmin: false,
+    isLogdIn: false
 }
 
 export function setUserState(newState){
