@@ -1,12 +1,15 @@
 let UserState = {
     email: null,
+    type: '',
     token: null,
-    isAdmin: false,
-    isLogdIn: false
+    firstNane: '',
+    lastNane: '',
+    loggedIn: false,
+    isAdmin: false
 }
 
-export function setUserState(newState){
-    UserState = {...UserState, ...newState }
+export function setUserState(newState) {
+    UserState = { ...UserState, ...newState }
 }
 
 export function getUserState() {

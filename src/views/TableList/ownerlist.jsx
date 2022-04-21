@@ -141,6 +141,7 @@ function TableList(props) {
 
   const handleEditClick = ({ prop, key }) => {
     const data = clientsList[key]
+    console.log(data)
     setForUpdate(true)
     setInitialFormData(data)
   }

@@ -11,12 +11,14 @@ import axios from "axios";
 import {getUserState} from "state/user"
 
 dotenv.config()
-axios.defaults.baseURL = "http://demos.smt.sa:3005"
+axios.defaults.baseURL = "http://localhost:3003"
 
 axios.interceptors.request.use(function (config) {
   if (config) {
     const state = getUserState();
     config.headers.authorization = `Bearer ${state.token}`
+    // config.headers.authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjU4YTkxOWQzOGQ3MDBkYTRiZDhiNWQiLCJpYXQiOjE2NDk5Nzg3MzcsImV4cCI6MTk2NDk5Nzg3Mzd9.CiiUfO35ZY46kL6VWr34ooil_gucfritQSzaEs9WSG4`
+
     config.headers['Access-Control-Allow-Origin'] = '*'
     
   }
@@ -30,7 +32,7 @@ axios.interceptors.response.use(function (response) {
   }
   else
     return [];
-})
+}, err => [])
 
 const hist = createBrowserHistory();
 

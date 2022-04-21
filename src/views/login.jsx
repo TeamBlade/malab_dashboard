@@ -22,10 +22,10 @@ const styles = theme => ({
 function Login({ ...props }) {
     const { show, classes, saveClick } = props
 
-    const { control, handleSubmit , register} = useForm({
+    const { control, handleSubmit, register } = useForm({
         defaultValues: {
-            email: '',
-            password: ''
+            email: 'admin@admin.com',
+            password: '11223344'
         }
     });
     const onSubmit = data => {
@@ -34,8 +34,12 @@ function Login({ ...props }) {
                 console.log(res.token)
                 setUserState({
                     email: res.email,
-                    isLogedIn: true,
-                    isAdmin: res.type === "admin", token: res.token
+                    type: res.type,
+                    loggedIn: true,
+                    firstName: res.firstNamem,
+                    lastName: res.lastName,
+                    isAdmin: res.type === "admin",
+                    token: res.token
                 })
             }
         })
@@ -46,7 +50,7 @@ function Login({ ...props }) {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container style={{ width: "50%", margin: "auto", bacground: "white" }}>
                     <ItemGrid sx={12} md={12}>
-                        <input type='text' ref={register} name='email'/>
+                        <input type='text' ref={register} name='email' />
                         <input type='password' ref={register} name='password' />
 
                     </ItemGrid>

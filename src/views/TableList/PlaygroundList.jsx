@@ -35,7 +35,14 @@ const TableList = ({ ...props }) => {
   const [pageSize, setPageSize] = useState(10);
 
   const fetchData = () => {
-    getAllPlaygrounds().then(data => setPlaygroundlist(data));
+    getAllPlaygrounds().then(data => {
+      if (!data)
+        data = []
+      let ref = 1;
+      const rows = data.map(v => [`${ref++}`, v.name, v.city,])
+      setTableRows(rows)
+      setPlaygroundlist(data)
+    });
   }
 
   useEffect(() => {
@@ -51,21 +58,21 @@ const TableList = ({ ...props }) => {
     fetchData()
   }
 
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedImages, setselectedImages] = useState(null);
 
 
   const [initalFormData, setInitialFormData] = useState(null);
   const defaultValues = {
-    name: 'playground one',
-    description: 'some playground',
-    dayStartTime: '02:11',
-    dayEndTime: '02:11',
-    nightStartTime: '05:11',
-    nightEndTime: '07:11',
+    name: '',
+    description: '',
+    dayStartTime: '',
+    dayEndTime: '',
+    nightStartTime: '',
+    nightEndTime: '',
     services: '',
-    city: "judah",
-    price: 2500,
-    type: 'gras'
+    city: "",
+    price: 0,
+    type: ''
 
   }
   const { control, setValue, register, handleSubmit } = useForm({
@@ -91,8 +98,8 @@ const TableList = ({ ...props }) => {
   const onSubmit = data => {
     console.log(data)
     const formData = new FormData();
-    for (const key of Object.keys(selectedRow))
-      formData.append("images", selectedRow[key]);
+    for (const key of Object.keys(selectedImages))
+      formData.append("images", selectedImages[key]);
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("services", JSON.stringify(data.services.map(s => s.value)))
@@ -113,7 +120,7 @@ const TableList = ({ ...props }) => {
     }))
     formData.append("type", data.type)
     if (forUpdate) {
-      formData.append("id", initalFormData["id"])
+      formData.append("id", data["id"])
       updatePlayground(formData).then(res => {
         refreshTable()
       })
@@ -123,9 +130,9 @@ const TableList = ({ ...props }) => {
         refreshTable()
       })
     }
-    // setOpen(false)
-    // setForUpdate(false)
-    // resetForm()
+    setOpen(false)
+    setForUpdate(false)
+    resetForm()
   }
 
   const [open, setOpen] = useState(false);
@@ -146,11 +153,17 @@ const TableList = ({ ...props }) => {
 
   // Popluates the form with selected data
   useEffect(() => {
+    console.log(initalFormData)
     if (initalFormData !== null && initalFormData !== undefined) {
       setOpen(true)
       Object.keys(initalFormData).forEach(key => {
         setValue(key, initalFormData[key])
       })
+      setValue("dayStartTime", initalFormData['dayShift']['start'])
+      setValue("dayEndTime", initalFormData['dayShift']['end'])
+      setValue("nightStartTime", initalFormData['nightShift']['start'])
+      setValue("nightEndTime", initalFormData['nightShift']['end'])
+
     }
   }, [initalFormData])
 
@@ -195,7 +208,7 @@ const TableList = ({ ...props }) => {
                 handleEditClick={handleEditClick}
                 tableHeaderColor="primary"
                 tableHead={["الرقم التعريفي	", "اسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
-                tableData={playgroundsList}
+                tableData={tableRows}
               />
             }
           />
@@ -267,7 +280,7 @@ const TableList = ({ ...props }) => {
                     render={({ field }) => <input
                       type="file"
                       multiple='multiple'
-                      onChange={(e) => { console.log(e.target.files); setSelectedRow(e.target.files) }}
+                      onChange={(e) => { console.log(e.target.files); setselectedImages(e.target.files) }}
 
                     />}
                   />
