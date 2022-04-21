@@ -3,9 +3,7 @@ import axios from "axios";
 async function getAllPlaygrounds() {
     try {
         const resBody = await axios.get(`/Playgrounds`)
-        let ref = 1;console.log(resBody)
-        const rows = await resBody.map(v => [`${ref++}`, v.name, v.city,])
-        return rows
+        return resBody
     } catch (e) { }
 
 }

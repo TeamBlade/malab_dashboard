@@ -24,8 +24,8 @@ function Login({ ...props }) {
 
     const { control, handleSubmit , register} = useForm({
         defaultValues: {
-            email: '',
-            password: ''
+            email: 'admin@admin.com',
+            password: '11223344'
         }
     });
     const onSubmit = data => {
@@ -34,7 +34,12 @@ function Login({ ...props }) {
                 console.log(res.token)
                 setUserState({
                     email: res.email,
-                    isAdmin: res.type === "admin", token: res.token
+                    type: res.type,
+                    loggedIn: true,
+                    firstName: res.firstNamem,
+                    lastName: res.lastName,
+                    isAdmin: res.type === "admin",
+                     token: res.token
                 })
             }
         })

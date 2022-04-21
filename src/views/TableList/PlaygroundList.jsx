@@ -35,7 +35,14 @@ const TableList = ({ ...props }) => {
   const [pageSize, setPageSize] = useState(10);
 
   const fetchData = () => {
-    getAllPlaygrounds().then(data => setPlaygroundlist(data));
+    getAllPlaygrounds().then(data => {
+      if (!data)
+        data = []
+      let ref = 1;
+      const rows = data.map(v => [`${ref++}`, v.name, v.city,])
+      setTableRows(rows)
+      setPlaygroundlist(data)
+    });
   }
 
   useEffect(() => {
@@ -115,17 +122,17 @@ const TableList = ({ ...props }) => {
     if (forUpdate) {
       formData.append("id", data["id"])
       updatePlayground(formData).then(res => {
-        // refreshTable()
+        refreshTable()
       })
     }
     else {
       createPlayground(formData).then(res => {
-        // refreshTable()
+        refreshTable()
       })
     }
-    // setOpen(false)
-    // setForUpdate(false)
-    // resetForm()
+    setOpen(false)
+    setForUpdate(false)
+    resetForm()
   }
 
   const [open, setOpen] = useState(false);
@@ -146,11 +153,17 @@ const TableList = ({ ...props }) => {
 
   // Popluates the form with selected data
   useEffect(() => {
+    console.log(initalFormData)
     if (initalFormData !== null && initalFormData !== undefined) {
       setOpen(true)
       Object.keys(initalFormData).forEach(key => {
         setValue(key, initalFormData[key])
       })
+      setValue("dayStartTime", initalFormData['dayShift']['start'])
+      setValue("dayEndTime", initalFormData['dayShift']['end'])
+      setValue("nightStartTime", initalFormData['nightShift']['start'])
+      setValue("nightEndTime", initalFormData['nightShift']['end'])
+
     }
   }, [initalFormData])
 
@@ -195,7 +208,7 @@ const TableList = ({ ...props }) => {
                 handleEditClick={handleEditClick}
                 tableHeaderColor="primary"
                 tableHead={["الرقم التعريفي	", "اسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
-                tableData={playgroundsList}
+                tableData={tableRows}
               />
             }
           />

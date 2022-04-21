@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { getPlaygroundsDropdown } from "../../api/playgrounds";
-import { createBooking } from '../../api/booking';
+import { createBooking, getAllBooking } from '../../api/booking';
+import { RHFInput } from 'react-hook-form-input';
 
 const styles = theme => ({
     container: {
@@ -20,7 +21,21 @@ const styles = theme => ({
 
 function ReservationForm({ ...props }) {
     const { show, classes, saveClick } = props
-    const { control, handleSubmit } = useForm({
+    
+    const [tableRows, setTableRows] = useState([]);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+  
+    const fetchData = () => {
+      getAllBooking().then(data => (data));
+    }
+  
+    useEffect(() => {
+      fetchData()
+    }, [])
+  
+    
+    const { control, handleSubmit, register, setValue } = useForm({
         defaultValues: {
             startTime: "07:30",
             endTime: "8:40",
@@ -35,6 +50,7 @@ function ReservationForm({ ...props }) {
         )
     }
 
+
     const [playgrounds, setPlaygrounds] = useState([]);
     useEffect(() => {
         getPlaygroundsDropdown()
@@ -48,66 +64,66 @@ function ReservationForm({ ...props }) {
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
 
-                <Controller
-                    name="playground"
-                    control={control}
-                    render={({ field }) => <Select
-                        {...field}
+            <RHFInput
+                  as={ <Select
                         options={playgrounds}
                     />}
-                />
+                    rules={{ required: true }}
+                    name="playground"
+                    register={register}
+                    setValue={setValue} />
 
 
-                <Controller
-                    name="startTime"
-                    control={control}
-                    render={({ field }) =>  <TextField
-                    id="date"
-                    label="التاريخ"
-                    {...field}
-                    type="date"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                />
+                <RHFInput
+                    as={<TextField
+                        id="date"
+                        label="التاريخ"
+                        type="date"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />}
+                    rules={{ required: true }}
+                    name="date"
+                    register={register}
+                    setValue={setValue} />
 
-                <Controller
-                    name="startTime"
-                    control={control}
-                    render={({ field }) => <TextField
+                <RHFInput
+                    as={<TextField
                         id="time"
                         label="وقت البداية"
-                        {...field}
                         type="time"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         inputProps={{
-                            step: 300, // 5 min
+                            step: 60, // 5 min
                         }}
                     />}
-                />
+                    rules={{ required: true }}
+                    name="startTime"
+                    register={register}
+                    setValue={setValue} />
 
-                <Controller
-                    name="endTime"
-                    control={control}
-                    render={({ field }) => <TextField
+                <RHFInput
+                    as={<TextField
                         id="time"
                         label="وقت النهاية"
-                        {...field}
                         type="time"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         inputProps={{
-                            step: 300, // 5 min
+                            step: 60, // 5 min
                         }}
                     />}
-                />
+                    rules={{ required: true }}
+                    name="endTime"
+                    register={register}
+                    setValue={setValue} />
 
 
                 <input type="submit" />
