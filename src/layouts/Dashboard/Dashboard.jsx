@@ -48,7 +48,7 @@ function getSwitchRoutes(routes) {
           return <Redirect from={prop.path} to={prop.to} key={key} />;
         return <Route path={prop.path} component={prop.component} key={key} />;
       })}
-      <Route path='/clients' component={ClientList}/>
+      <Route path='/clients' component={ClientList} />
     </Switch>
   )
 }
@@ -57,8 +57,8 @@ function SidbarComponent({ ...props }) {
   const [switchRoutes, setSwitchRoutes] = useState(getSwitchRoutes(componentRoutes));
   const [mobileOpen, setmobileOpen] = useState(false);
   const { refs, classes, ...rest } = props
-const refss = useRef("mainPanel")
-const location = useLocation()
+  const refss = useRef("mainPanel")
+  const location = useLocation()
   const handleDrawerToggle = () => {
     setmobileOpen(!mobileOpen)
   };
@@ -69,6 +69,7 @@ const location = useLocation()
     setRoutes(getDashoardRoutes(getUserState().isAdmin))
     setSwitchRoutes(getSwitchRoutes(getDashoardRoutes(getUserState.isAdmin)))
     console.log(getDashoardRoutes(getUserState().isAdmin))
+    console.log(switchRoutes)
   }, []);
 
   return (
@@ -95,10 +96,12 @@ const location = useLocation()
             {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
             {getRoute() ? (
               <div className={classes.content}>
-                <div className={classes.container}>{switchRoutes}</div>
+                <div className={classes.container}>{getSwitchRoutes(getDashoardRoutes( getUserState().isAdmin)) 
+                }</div>
               </div>
             ) : (
-              <div className={classes.map}>{switchRoutes}</div>
+              <div className={classes.map}>{getDashoardRoutes(getUserState().isAdmin)
+              }</div>
             )}
             {getRoute() ? <Footer /> : null}
           </div>
