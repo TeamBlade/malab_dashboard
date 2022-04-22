@@ -18,7 +18,7 @@ import { Edit, Close, Check } from "@material-ui/icons";
 
 function CustomTable({ ...props }) {
   const { showBookingActions, classes, tableHead, tableData, 
-    tableHeaderColor, handleEditClick, handleDeleteClick, handleAcceptClick, handleRejectClick } = props;
+    tableHeaderColor, handleEditClick, handleDeleteClick,reservationList, handleAcceptClick, handleRejectClick } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -96,7 +96,7 @@ function CustomTable({ ...props }) {
                       />
                     </IconButton>
                   </Tooltip>
-                  {showBookingActions ? <Tooltip
+                  {showBookingActions && reservationList[key].status == 'pending' ? <Tooltip
                     id="tooltip-top-start"
                     title="موافقة"
                     placement="top"
@@ -110,7 +110,7 @@ function CustomTable({ ...props }) {
                     </Button>
                   </Tooltip> : null}
                   
-                  {showBookingActions ? <Tooltip
+                  {showBookingActions && reservationList[key].status == 'pending' ? <Tooltip
                     id="tooltip-top-start"
                     title="موافقة"
                     placement="top"

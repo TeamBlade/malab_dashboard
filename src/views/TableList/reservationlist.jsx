@@ -31,7 +31,7 @@ function TableList({ ...props }) {
   const [tableRows, setTableRows] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const showBookingActions = getUserState().isAdmin
+  const showBookingActions = getUserState().isAdmin 
   const fetchData = () => {
     getAllBooking(pageNumber, pageSize).then(data => {
       if (!data)
@@ -148,6 +148,7 @@ function TableList({ ...props }) {
             cardSubtitle="من الاحدث الي الاقدم"
             content={
               <Table
+              reservationList={reservationList}
                 handleDeleteClick={handleDeleteClick}
                 handleEditCLick={handleEditClick}
                 showBookingActions={showBookingActions}
