@@ -1,4 +1,5 @@
 let UserState = {
+    id: null,
     email: null,
     type: '',
     token: null,

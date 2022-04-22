@@ -11,7 +11,8 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import { addUser, deleteUser, getAllUsers, updateUser } from "../../api/admin";
 import { RHFInput } from 'react-hook-form-input';
-
+import { Redirect } from 'react-router-dom'
+import {getUserState} from '../../state/user'
 
 const styles = theme => ({
   container: {
@@ -33,8 +34,8 @@ function TableList(props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const fetchData = () => {
-    getAllUsers(pageNumber, pageSize, "user").then(data => {
+  const fetchData = (cancel) => {
+    getAllUsers(pageNumber, pageSize, "user", cancel).then(data => {
       if (!data)
         data = []
       setClientList(data)
@@ -42,13 +43,17 @@ function TableList(props) {
       console.log(rows);
       setTableRows(rows)
     })
+
   }
 
   useEffect(() => {
-    fetchData()
+    const controller = new window.AbortController();
+    fetchData(controller)
+    return () =>{controller.abort()}
   }, [pageNumber])
 
   const refreshTable = () => {
+    
     fetchData()
   }
 
@@ -132,6 +137,8 @@ function TableList(props) {
 
   // Popluates the form with selected data
   useEffect(() => {
+    let cancel = false
+    if(!cancel)
     if (initalFormData !== null && initalFormData !== undefined) {
       setOpen(true)
       Object.keys(initalFormData).forEach(key => {
@@ -139,6 +146,8 @@ function TableList(props) {
         setValue("type", "user")
       })
     }
+    return () =>{cancel = true}
+
   }, [initalFormData])
 
   const handleEditClick = ({ prop, key }) => {
@@ -156,184 +165,187 @@ function TableList(props) {
       }
     )
   }
+  const isAdmin = getUserState().isAdmin;
+  if (isAdmin)
+    return (
+      <div>
+        <Grid container>
+          <ItemGrid xs={12} sm={12} md={12}>
+            <RegularCard
+              cardTitle={
+                <Grid container>
 
-  return (
-    <div>
-      <Grid container>
-        <ItemGrid xs={12} sm={12} md={12}>
-          <RegularCard
-            cardTitle={
+                  <ItemGrid xs={11} md={11}>
+                    قائمه العملاء
+                  </ItemGrid>
+                  <ItemGrid xs={1} md={1}>
+                    <Button color="primary" onClick={() => {
+                      setOpen(true);
+                    }}>Create</Button>
+                  </ItemGrid>
+                </Grid>
+              }
+              cardSubtitle="من الاحدث الي الاقدم"
+              content={
+                <Table
+                  showEditButton={true}
+                  showDeleteButton={false}
+                  handleDeleteClick={handleDeleteClick}
+                  handleEditClick={handleEditClick}
+                  tableHeaderColor="primary"
+                  tableHead={["اسم العميل", "رقم الهاتف", "المدينه", "الايميل"]}
+                  tableData={tableRows}
+                />
+              }
+            />
+          </ItemGrid>
+          <ItemGrid>
+            <Button onClick={() => prevPage()}>الصفحة السابقة</Button>
+            <Button onClick={() => nextPage()}>الصفحة التالية</Button>
+
+          </ItemGrid>
+        </Grid>
+        <div id="dialog"></div>
+
+        <Dialog
+          dir="rtl"
+          fullWidth
+          maxWidth="md"
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <form onSubmit={handleSubmit(onSubmit)} >
+            <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات العميل" : "إضافة عميل جديد"}</DialogTitle>
+            <DialogContent>
               <Grid container>
 
-                <ItemGrid xs={11} md={11}>
-                  قائمه العملاء
-                </ItemGrid>
-                <ItemGrid xs={1} md={1}>
-                  <Button color="primary" onClick={() => {
-                    setOpen(true);
-                  }}>Create</Button>
-                </ItemGrid>
-              </Grid>
-            }
-            cardSubtitle="من الاحدث الي الاقدم"
-            content={
-              <Table
-                showEditButton={true}
-                showDeleteButton={false}
-                handleDeleteClick={handleDeleteClick}
-                handleEditClick={handleEditClick}
-                tableHeaderColor="primary"
-                tableHead={["اسم العميل", "رقم الهاتف", "المدينه", "الايميل"]}
-                tableData={tableRows}
-              />
-            }
-          />
-        </ItemGrid>
-        <ItemGrid>
-          <Button onClick={() => prevPage()}>الصفحة السابقة</Button>
-          <Button onClick={() => nextPage()}>الصفحة التالية</Button>
-
-        </ItemGrid>
-      </Grid>
-      <div id="dialog"></div>
-
-      <Dialog
-        dir="rtl"
-        fullWidth
-        maxWidth="md"
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <form onSubmit={handleSubmit(onSubmit)} >
-          <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات العميل" : "إضافة عميل جديد"}</DialogTitle>
-          <DialogContent>
-            <Grid container>
-
-              <ItemGrid sx={12} md={4}>
-                <RHFInput
-                  as={<TextField
-                    id="firstName"
-                    label="الإسم الأول"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="firstName"
-                  register={register}
-                  setValue={setValue} />
-              </ItemGrid>
-              <ItemGrid sx={12} md={4}>
-                <RHFInput
-                  as={<TextField
-                    id="lastName"
-                    label="الإسم الثاني"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="lastName"
-                  register={register}
-                  setValue={setValue} />
-              </ItemGrid>
-              <ItemGrid sx={12} md={4}>
-                <Controller
-                  name="image"
-                  control={control}
-                  render={({ field }) => <input
-                    type="file"
-                    onChange={(e) => setSelectedRow(e.target.files[0])}
-
-                  />}
-                />
-              </ItemGrid>
-              <ItemGrid sx={12} md={4}>
-                <RHFInput
-                  as={<TextField
-                    id="city"
-                    label="المدينة"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="city"
-                  register={register}
-                  setValue={setValue} />
-              </ItemGrid>
-              <ItemGrid sx={12} md={4}>
-                <RHFInput
-                  as={<TextField
-                    id="phone"
-                    label="رقم الهاتف"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="phone"
-                  register={register}
-                  setValue={setValue} />
-              </ItemGrid>
-              <ItemGrid sx={12} md={4}>
-                <RHFInput
-                  as={<TextField
-                    id="email"
-                    label="البريد الإلكتروني"
-                    type="text"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
-                  rules={{ required: true }}
-                  name="email"
-                  register={register}
-                  setValue={setValue} />
-              </ItemGrid>
-              {(!forUpdate) ?
                 <ItemGrid sx={12} md={4}>
                   <RHFInput
                     as={<TextField
-                      id="password"
-                      label="كلمة السر"
-                      type="password"
+                      id="firstName"
+                      label="الإسم الأول"
+                      type="text"
                       className={classes.textField}
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />}
                     rules={{ required: true }}
-                    name="password"
+                    name="firstName"
                     register={register}
                     setValue={setValue} />
-                </ItemGrid> : <div></div>
-              }
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              إلغاء
-            </Button>
-            <Button type="submit" color="primary">
-              حفظ
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+                </ItemGrid>
+                <ItemGrid sx={12} md={4}>
+                  <RHFInput
+                    as={<TextField
+                      id="lastName"
+                      label="الإسم الثاني"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="lastName"
+                    register={register}
+                    setValue={setValue} />
+                </ItemGrid>
+                <ItemGrid sx={12} md={4}>
+                  <Controller
+                    name="image"
+                    control={control}
+                    render={({ field }) => <input
+                      type="file"
+                      onChange={(e) => setSelectedRow(e.target.files[0])}
 
-    </div>
-  );
+                    />}
+                  />
+                </ItemGrid>
+                <ItemGrid sx={12} md={4}>
+                  <RHFInput
+                    as={<TextField
+                      id="city"
+                      label="المدينة"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="city"
+                    register={register}
+                    setValue={setValue} />
+                </ItemGrid>
+                <ItemGrid sx={12} md={4}>
+                  <RHFInput
+                    as={<TextField
+                      id="phone"
+                      label="رقم الهاتف"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="phone"
+                    register={register}
+                    setValue={setValue} />
+                </ItemGrid>
+                <ItemGrid sx={12} md={4}>
+                  <RHFInput
+                    as={<TextField
+                      id="email"
+                      label="البريد الإلكتروني"
+                      type="text"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />}
+                    rules={{ required: true }}
+                    name="email"
+                    register={register}
+                    setValue={setValue} />
+                </ItemGrid>
+                {(!forUpdate) ?
+                  <ItemGrid sx={12} md={4}>
+                    <RHFInput
+                      as={<TextField
+                        id="password"
+                        label="كلمة السر"
+                        type="password"
+                        className={classes.textField}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />}
+                      rules={{ required: true }}
+                      name="password"
+                      register={register}
+                      setValue={setValue} />
+                  </ItemGrid> : <div></div>
+                }
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                إلغاء
+              </Button>
+              <Button type="submit" color="primary">
+                حفظ
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+
+      </div>
+    );
+    else
+    return (<Redirect from='/clients' to='/login'/>)
 }
 
 export default withStyles(styles)(TableList);

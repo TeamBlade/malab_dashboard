@@ -38,10 +38,40 @@ async function getByPlaygroundAndDate(playground, date) {
        return resBody
     } catch (e) { }
 }
+
+async function acceptBooking(id) {
+    try {
+        const res = axios.get('/owners/booking/accept/' + id);
+        return res;
+    }catch(e) {
+
+    }
+}
+
+
+async function rejectBooking(id) {
+    try {
+        const res = axios.get('/owners/booking/reject/' + id);
+        return res;
+    }catch(e) {
+
+    }
+}
+
+async function getBookingByOwner(ownerId) {
+    try {
+        const res = axios.get('/owners/playgrounds/')
+        return res;
+    }catch(e) {}
+}
+
 export {
     getAllBooking,
     getBookingById,
+    getBookingByOwner,
     getByPlaygroundId,
     getByPlaygroundAndDate,
     createBooking,
+    acceptBooking,
+    rejectBooking
 }

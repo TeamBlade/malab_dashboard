@@ -59,7 +59,7 @@ async function createPlayground(playground) {
 async function getPlaygroundsByOwner(ownerId) {
     try {
 
-        const resBody = await axios.get(`/owners/playgrounds/${ownerId}`)
+        const resBody = await axios.get(`/owners/playgrounds/`)
         return resBody
     } catch (e) { }
 

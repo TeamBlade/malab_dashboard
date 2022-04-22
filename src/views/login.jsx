@@ -6,7 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { setUserState } from '../state/user';
 import { ItemGrid } from "components"
 import { Grid } from 'material-ui';
-
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import App from 'views/Dashboard/Dashboard'
 const styles = theme => ({
     container: {
         display: 'flex',
@@ -21,7 +22,7 @@ const styles = theme => ({
 
 function Login({ ...props }) {
     const { show, classes, saveClick } = props
-
+    const history = useHistory()
     const { control, handleSubmit, register } = useForm({
         defaultValues: {
             email: 'admin@admin.com',
@@ -33,6 +34,7 @@ function Login({ ...props }) {
             if (res) {
                 console.log(res.token)
                 setUserState({
+                    id: res.id,
                     email: res.email,
                     type: res.type,
                     loggedIn: true,
@@ -41,6 +43,8 @@ function Login({ ...props }) {
                     isAdmin: res.type === "admin",
                     token: res.token
                 })
+                App
+                history.push('/')
             }
         })
     }

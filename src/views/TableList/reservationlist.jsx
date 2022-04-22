@@ -9,8 +9,9 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RHFInput } from 'react-hook-form-input';
 import Select  from 'react-select';
-import { createBooking, getAllBooking } from "../../api/booking";
+import { acceptBooking, createBooking, getAllBooking, rejectBooking } from "../../api/booking";
 import { getPlaygroundsDropdown } from '../../api/playgrounds';
+import { getUserState } from '../../state/user';
 
 const styles = theme => ({
   container: {
@@ -30,14 +31,14 @@ function TableList({ ...props }) {
   const [tableRows, setTableRows] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
+  const showBookingActions = getUserState().isAdmin
   const fetchData = () => {
     getAllBooking(pageNumber, pageSize).then(data => {
       if (!data)
         data = []
       setReservationList(data)
-      const rows = data.map(v => [v.ref, v.startTime + " " + v.playground, v.user])
-      console.log(rows);
+      const rows = data.map(v => [v.ref, v.startTime + " " + v.endTime, v.playground.name,v.playgroundOwner.firstName + " " + v.playgroundOwner.lastName, v.user.firstName +" " + v.user.lastName])
+      console.log('tablelist', rows);
       setTableRows(rows)
     })
   }
@@ -51,6 +52,7 @@ function TableList({ ...props }) {
   }
 
   useEffect(() => {
+    fetchData()
     getPlaygroundsDropdown().then(data => setplaygrounds(data))
   }, [])
   const [selectedRow, setSelectedRow] = useState(null);
@@ -76,10 +78,10 @@ function TableList({ ...props }) {
   const onSubmit = data => {
     data.playground = data.playground.value
     createBooking(data).then(res => console.log(res))
-    // setOpen(false)
-
-    // setForUpdate(false)
-    // resetForm()
+    setOpen(false)
+    setForUpdate(false)
+    resetForm()
+    refreshTable()
   }
 
   const [open, setOpen] = useState(false);
@@ -118,6 +120,14 @@ function TableList({ ...props }) {
   const handleDeleteClick = ({ prop, key }) => {
 
   }
+  const handleAcceptClick = ({prop, key}) => {
+    const id = reservationList[key]._id
+    acceptBooking(id).then(res => {})
+  }
+  const handleRejectClick = ({prop, key}) => {
+    const id = reservationList[key]._id
+    rejectBooking(id).then(res => {})
+  }
   return (
     <div>
       <Grid container>
@@ -140,8 +150,11 @@ function TableList({ ...props }) {
               <Table
                 handleDeleteClick={handleDeleteClick}
                 handleEditCLick={handleEditClick}
+                showBookingActions={showBookingActions}
+                handleAcceptClick={handleAcceptClick}
+                handleRejectClick={handleRejectClick}
                 tableHeaderColor="primary"
-                tableHead={["رقم الحجز", "وقت الحجز", "اسم الملعب", "اسم الحاجز"]}
+                tableHead={["رقم الحجز", "وقت الحجز", "اسم الملعب", "اسم الحاجز", "إسممستخدم"]}
                 tableData={tableRows}
               />
             }

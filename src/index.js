@@ -2,13 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch } from "react-router-dom";
-
+import Dashboard from "./layouts/Dashboard/Dashboard";
+import login from "./views/login";
 import "assets/css/material-dashboard-react.css?v=1.2.0";
 
 import indexRoutes from "routes/index.jsx";
 import dotenv from "dotenv"
 import axios from "axios";
 import {getUserState} from "state/user"
+import ClientList from 'views/TableList/clientsList.jsx'
+import OwnersList from 'views/TableList/ownerlist.jsx'
 
 dotenv.config()
 axios.defaults.baseURL = "http://localhost:3003"
@@ -40,8 +43,14 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       {indexRoutes.map((prop, key) => {
-        return <Route path={prop.path} component={prop.component} key={key} />;
+        return <Route path={prop.path} exact component={prop.component} key={key} />;
       })}
+      {/* <Route exact path='/login' component={login}/>
+      <Route exact path='/clients' component={ClientList}/>
+      <Route exact path='/owners' component={OwnersList}/> */}
+
+      <Route path='/' component={Dashboard}/>
+
     </Switch>
   </Router>,
   document.getElementById("root")

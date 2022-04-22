@@ -4,11 +4,9 @@ import { Redirect } from 'react-router-dom'
 import React from "react";
 export default function ProtectedRoute({ ...props }) {
     const { chilren: children, ...rest } = props
-    const userState = getUserState();
-    if (userState.isLoggedIn && userState.isAdmin)
-        return children
-    else
-        return
-            <Redirect to='/login'></Redirect>
+    const isAdmin = getUserState().isAdmin;
+    if (!isAdmin)
+        return <Redirect to='/login' />
+    return <children/>
 
 }

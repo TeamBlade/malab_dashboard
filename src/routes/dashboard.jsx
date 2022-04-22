@@ -24,9 +24,8 @@ import {
 import login from "../views/login";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { getUserState } from "../state/user";
-
-if(getUserState().)
-const dashboardRoutes = [
+const isNotAdmin = getUserState().isAdmin === false;
+let dashboardRoutes = [
   {
     path: "/dashboard",
     sidebarName: "الرئيسه",
@@ -34,20 +33,7 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: DashboardPage
   },
-  {
-    path: "/clients",
-    sidebarName: "قائمه العملاء ",
-    navbarName: "قائمه العملاء",
-    icon: Person,
-    component: <ProtectedRoute from='/clients'>ClientTableList</ProtectedRoute>
-  },
-  {
-    path: "/owners",
-    sidebarName: " قائمه اصحاب الملاعب",
-    navbarName: "قائمه اصحاب الملاعب",
-    icon: Person,
-    component: OwnerTableList
-  },
+  
   {
     path: "/playgrounds",
     sidebarName: "قائمه الملاعب ",
@@ -86,5 +72,72 @@ const dashboardRoutes = [
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
+
+export function getDashoardRoutes(isAdmin) {
+  const adminRotues = [
+    {
+      path: "/clients",
+      sidebarName: "قائمه العملاء ",
+      navbarName: "قائمه العملاء",
+      icon: Person,
+      component: ClientTableList
+    },
+    {
+      path: "/owners",
+      sidebarName: " قائمه اصحاب الملاعب",
+      navbarName: "قائمه اصحاب الملاعب",
+      icon: Person,
+      component: OwnerTableList
+    }
+  ]
+  let routes = [
+    {
+      path: "/dashboard",
+      sidebarName: "الرئيسه",
+      navbarName: "لوحه التحكم الرئيسه",
+      icon: Dashboard,
+      component: DashboardPage
+    }]
+  if (isAdmin)
+    routes = routes.concat(...adminRotues)
+  routes = routes.concat([{
+    path: "/playgrounds",
+    sidebarName: "قائمه الملاعب ",
+    navbarName: " قائمه الملاعب",
+    icon: ContentPaste,
+    component: PlaygroundTableList
+  },
+  {
+    path: "/reservations",
+    sidebarName: "قائمه الحجوزات",
+    navbarName: "قائمه الحجوزات",
+    icon: LibraryBooks,
+    component: ReservationTableList
+  },
+  {
+    path: "/icons",
+    sidebarName: "الحساب الشخصي",
+    navbarName: "الحساب الشخصي",
+    icon: BubbleChart,
+    component: UserProfile
+  },
+
+  {
+    path: "/notifications",
+    sidebarName: "الاشعارات",
+    navbarName: "الاشعارات",
+    icon: Notifications,
+    component: UserProfile
+  },
+  {
+    path: "/login",
+    sidebarName: "تسجيل الدخول",
+    navbarName: "تسجيل الدخول",
+    icon: ExitToApp,
+    component: login
+  },
+  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }])
+  return routes
+}
 
 export default dashboardRoutes;

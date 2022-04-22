@@ -11,8 +11,9 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import { RHFInput } from 'react-hook-form-input';
 import { getServiceDropdown } from "../../api/services"
-import { createPlayground, deletePlayground, getAllPlaygrounds, updatePlayground } from '../../api/playgrounds';
+import { createPlayground, deletePlayground, getAllPlaygrounds, getPlaygroundsByOwner, updatePlayground } from '../../api/playgrounds';
 import Select from 'react-select';
+import { getUserState } from '../../state/user';
 
 const styles = theme => ({
   container: {
@@ -34,16 +35,24 @@ const TableList = ({ ...props }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const fetchData = () => {
-    getAllPlaygrounds().then(data => {
-      if (!data)
-        data = []
-      let ref = 1;
-      const rows = data.map(v => [`${ref++}`, v.name, v.city,])
-      setTableRows(rows)
-      setPlaygroundlist(data)
-    });
+  const loadData = (data) => {
+    if (!data)
+      data = []
+    let ref = 1;
+    const rows = data.map(v => [`${ref++}`, v.name, v.city,])
+    setTableRows(rows)
+    setPlaygroundlist(data)
   }
+  const fetchData = () => {
+    if (getUserState().isAdmin)
+      getAllPlaygrounds().then(data => {
+        loadData(data)
+      });
+    else {
+    getPlaygroundsByOwner(getUserState().id).then(data => loadData(data))
+    }
+  }
+
 
   useEffect(() => {
     fetchData()
@@ -206,6 +215,8 @@ const TableList = ({ ...props }) => {
               <Table
                 handleDeleteClick={handleDeleteClick}
                 handleEditClick={handleEditClick}
+                showDelete={getUserState().isAdmin}
+                showEdit={getUserState().isAdmin}
                 tableHeaderColor="primary"
                 tableHead={["الرقم التعريفي	", "اسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
                 tableData={tableRows}

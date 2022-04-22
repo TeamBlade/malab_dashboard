@@ -10,14 +10,15 @@ import {
 
   TableCell
 } from "material-ui";
-
+import { Button } from "material-ui";
 import PropTypes from "prop-types";
 
 import tasksStyle from "assets/jss/material-dashboard-react/tasksStyle.jsx";
 import { Edit, Close, Check } from "@material-ui/icons";
 
 function CustomTable({ ...props }) {
-  const { classes, tableHead, tableData, tableHeaderColor, handleEditClick, handleDeleteClick } = props;
+  const { showBookingActions, classes, tableHead, tableData, 
+    tableHeaderColor, handleEditClick, handleDeleteClick, handleAcceptClick, handleRejectClick } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -66,7 +67,7 @@ function CustomTable({ ...props }) {
                   >
                     <IconButton
                       aria-label="Edit"
-                      onClick={() => handleEditClick({prop,key})}
+                      onClick={() => handleEditClick({ prop, key })}
 
                       className={classes.tableActionButton}
                     >
@@ -95,6 +96,33 @@ function CustomTable({ ...props }) {
                       />
                     </IconButton>
                   </Tooltip>
+                  {showBookingActions ? <Tooltip
+                    id="tooltip-top-start"
+                    title="موافقة"
+                    placement="top"
+                    classes={{ tooltip: classes.tooltip }}
+                  >
+                    <Button
+                      aria-label="Close"
+                      onClick={() => handleAcceptClick({ prop, key })}
+                      className={classes.tableActionButton}
+                    >موافقة
+                    </Button>
+                  </Tooltip> : null}
+                  
+                  {showBookingActions ? <Tooltip
+                    id="tooltip-top-start"
+                    title="موافقة"
+                    placement="top"
+                    classes={{ tooltip: classes.tooltip }}
+                  >
+                    <Button
+                      aria-label="Close"
+                      onClick={() => handleRejectClick({ prop, key })}
+                      className={classes.tableActionButton}
+                    >إلغاء
+                    </Button>
+                  </Tooltip> : null}
                 </TableCell>
 
 

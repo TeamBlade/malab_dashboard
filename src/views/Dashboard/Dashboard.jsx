@@ -174,7 +174,7 @@ class Dashboard extends React.Component {
               cardSubtitle="Pending Owners"
               content={
                 <Table
-                  tableHeaderColor="blue"
+                  tableHeaderColor="primary"
                   tableHead={["الرقم التعريفي", "الاسم", "رقم الهاتف", "العنوان"]}
                   tableData={[
                     ["1", "يوسف الشيخ ", "0912341231321,", "الرياض"],
@@ -195,7 +195,7 @@ class Dashboard extends React.Component {
               cardSubtitle="Pending Playgrounds"
               content={
                 <Table
-                  tableHeaderColor="red"
+                  tableHeaderColor="danger"
                   tableHead={["الرقم التعريفي", "اسم الملعب", "موقع الملعب", "صاحب الملعب"]}
                   tableData={[
                     ["1", "الفسيم ", "ملعب القسيم", "علي عثمان"],
