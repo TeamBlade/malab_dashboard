@@ -1,29 +1,15 @@
+import {
+  BubbleChart, ContentPaste, Dashboard, ExitToApp, LibraryBooks, Notifications, Person
+} from "@material-ui/icons";
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
-import UserProfile from "views/UserProfile/UserProfile.jsx";
-import TableList from "views/TableList/TableList.jsx";
-import PlaygroundTableList from "views/TableList/PlaygroundList.jsx";
 import ClientTableList from "views/TableList/clientsList.jsx";
 import OwnerTableList from "views/TableList/ownerlist.jsx";
+import PlaygroundTableList from "views/TableList/PlaygroundList.jsx";
 import ReservationTableList from "views/TableList/reservationlist.jsx";
-import React from "react";
-import Typography from "views/Typography/Typography.jsx";
-import Icons from "views/Icons/Icons.jsx";
-import Maps from "views/Maps/Maps.jsx";
-import NotificationsPage from "views/Notifications/Notifications.jsx";
-import {
-  Dashboard,
-  Person,
-  ContentPaste,
-  LibraryBooks,
-  BubbleChart,
-  LocationOn,
-  ExitToApp,
-  Notifications,
-  Info
-} from "@material-ui/icons";
-import login from "../views/login";
-import ProtectedRoute from "../components/ProtectedRoute";
+import UserProfile from "views/UserProfile/UserProfile.jsx";
 import { getUserState } from "../state/user";
+import logout from 'views/logout'
+
 const isNotAdmin = getUserState().isAdmin === false;
 let dashboardRoutes = [
   {
@@ -33,7 +19,7 @@ let dashboardRoutes = [
     icon: Dashboard,
     component: DashboardPage
   },
-  
+
   {
     path: "/playgrounds",
     sidebarName: "قائمه الملاعب ",
@@ -64,11 +50,11 @@ let dashboardRoutes = [
     component: UserProfile
   },
   {
-    path: "/Logout",
-    sidebarName: "تسجيل الدخول",
-    navbarName: "تسجيل الدخول",
+    path: "/logout",
+    sidebarName: "تسجيل الخروج",
+    navbarName: "تسجيل الخروج",
     icon: ExitToApp,
-    component: login
+    component: logout
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
@@ -130,13 +116,14 @@ export function getDashoardRoutes(isAdmin) {
     component: UserProfile
   },
   {
-    path: "/login",
-    sidebarName: "تسجيل الدخول",
-    navbarName: "تسجيل الدخول",
+    path: "/logout",
+    sidebarName: "تسجيل الخروج",
+    navbarName: "تسجيل الخروج",
     icon: ExitToApp,
-    component: login
+    component: logout
   },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }])
+  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  ])
   return routes
 }
 

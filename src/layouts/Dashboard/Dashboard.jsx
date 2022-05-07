@@ -39,7 +39,7 @@ const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 // Custom Material-UI class name generator.
 const generateClassName = createGenerateClassName();
 let componentRoutes = getDashoardRoutes(false)
-console.log(componentRoutes)
+
 function getSwitchRoutes(routes) {
   return (
     <Switch>
@@ -68,8 +68,7 @@ function SidbarComponent({ ...props }) {
   useEffect(() => {
     setRoutes(getDashoardRoutes(getUserState().isAdmin))
     setSwitchRoutes(getSwitchRoutes(getDashoardRoutes(getUserState.isAdmin)))
-    console.log(getDashoardRoutes(getUserState().isAdmin))
-    console.log(switchRoutes)
+
   }, []);
 
   return (
@@ -96,7 +95,7 @@ function SidbarComponent({ ...props }) {
             {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
             {getRoute() ? (
               <div className={classes.content}>
-                <div className={classes.container}>{getSwitchRoutes(getDashoardRoutes( getUserState().isAdmin)) 
+                <div className={classes.container}>{getSwitchRoutes(getDashoardRoutes(getUserState().isAdmin))
                 }</div>
               </div>
             ) : (
@@ -119,7 +118,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.state.isAdmin)
+
     if (navigator.platform.indexOf('Win') > -1) {
       // eslint-disable-next-line
       // const ps = new PerfectScrollbar(this.refs.mainPanel);

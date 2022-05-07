@@ -8,16 +8,20 @@ import { ItemGrid } from "components"
 import { Grid } from 'material-ui';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import App from 'views/Dashboard/Dashboard'
+import './login.css'
 const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: 200,
     },
+
 });
 
 function Login({ ...props }) {
@@ -25,14 +29,13 @@ function Login({ ...props }) {
     const history = useHistory()
     const { control, handleSubmit, register } = useForm({
         defaultValues: {
-            email: 'admin@admin.com',
-            password: '11223344'
+            email: '',
+            password: ''
         }
     });
     const onSubmit = data => {
         login(data).then(res => {
             if (res) {
-                console.log(res.token)
                 setUserState({
                     id: res.id,
                     email: res.email,
@@ -43,26 +46,18 @@ function Login({ ...props }) {
                     isAdmin: res.type === "admin",
                     token: res.token
                 })
-                App
                 history.push('/')
+
             }
-        })
+        }).catch(e => { })
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container style={{ width: "50%", margin: "auto", bacground: "white" }}>
-                    <ItemGrid sx={12} md={12}>
-                        <input type='text' ref={register} name='email' />
-                        <input type='password' ref={register} name='password' />
-
-                    </ItemGrid>
-                    <ItemGrid sx={12} md={12}>
-
-                        <input type="submit" value="تسجيل الدخول" />
-                    </ItemGrid>
-                </Grid>
+        <div className='container'>
+            <form onSubmit={handleSubmit(onSubmit)} id='login-form'>
+                <input type='text' ref={register} name='email' />
+                <input type='password' ref={register} name='password' />
+                <input type="submit" value="تسجيل الدخول" />
             </form>
         </div>
     )
