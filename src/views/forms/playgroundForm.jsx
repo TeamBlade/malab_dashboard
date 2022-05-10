@@ -41,11 +41,14 @@ function PlaygroundForm({ ...props }) {
 
 
     const [formData, setFormData] = useState(null);
-    data.dayStartTime = data.dayShift.start;
-    data.dayEndTime = data.dayShift.end;
-    data.nighStartTime = data.nightShift.start;
-    data.nightEndTime = data.nightShift.end;
-    data.services = data.services/*  */.map(x => ({ label: x.name, value: x._id }))
+    if(forUpdate) {
+
+        data.dayStartTime = data.dayShift.start;
+        data.dayEndTime = data.dayShift.end;
+        data.nighStartTime = data.nightShift.start;
+        data.nightEndTime = data.nightShift.end;
+        data.services = data.services/*  */.map(x => ({ label: x.name, value: x._id }))
+    }
     const defaultValues = data || {
         name: '',
         description: '',
