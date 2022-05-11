@@ -6,6 +6,8 @@ import { Redirect } from 'react-router-dom';
 import ClientsForm from 'views/forms/clientsForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
 import { getUserState } from '../../state/user';
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -89,6 +91,7 @@ function TableList(props) {
         <Grid container>
           <ItemGrid xs={12} sm={12} md={12}>
             <RegularCard
+              headerColor='green'
               cardTitle={
                 <Grid container>
 
@@ -96,13 +99,14 @@ function TableList(props) {
                     قائمه العملاء
                   </ItemGrid>
                   <ItemGrid xs={1} md={1}>
-                    <Button color="primary" onClick={() => {
+                    <button className='btn btn-outline-primary' onClick={() => {
                       setOpen(true);
-                    }}>Create</Button>
+                      setForUpdate(false)
+                    }}>إنشاء</button>
                   </ItemGrid>
                 </Grid>
               }
-              cardSubtitle="من الاحدث الي الاقدم"
+              cardSubtitle="من الأحدث إلى الأقدم"
               content={
                 <Table
                   showEditButton={true}
@@ -110,7 +114,7 @@ function TableList(props) {
                   handleDeleteClick={handleDeleteClick}
                   handleEditClick={handleEditClick}
                   tableHeaderColor="primary"
-                  tableHead={["اسم العميل", "رقم الهاتف", "المدينه", "الايميل"]}
+                  tableHead={["إسم العميل", "رقم الهاتف", "المدينه", "الإيميل"]}
                   tableData={tableRows}
                 />
               }

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ReservationsForm from 'views/forms/reservationForm';
 import { acceptBooking, getAllBooking, rejectBooking } from "../../api/booking";
 import { getUserState } from '../../state/user';
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 
 const styles = theme => ({
   container: {
@@ -86,19 +87,21 @@ function TableList({ ...props }) {
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
+            headerColor='green'
             cardTitle={
               <Grid container>
-
                 <ItemGrid xs={11} md={11}>
-
                   قائمه الحجوزات
                 </ItemGrid>
                 <ItemGrid xs={1} md={1}>
-                  <Button color="primary" onClick={() => setOpen(true)}>Create</Button>
+                  <button className='btn btn-outline-primary' onClick={() => {
+                    setOpen(true)
+                    setForUpdate(false)
+                  }}>إنشاء</button>
                 </ItemGrid>
               </Grid>
             }
-            cardSubtitle="من الاحدث الي الاقدم"
+            cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <Table
                 reservationList={reservationList}
@@ -108,7 +111,7 @@ function TableList({ ...props }) {
                 handleAcceptClick={handleAcceptClick}
                 handleRejectClick={handleRejectClick}
                 tableHeaderColor="primary"
-                tableHead={["رقم الحجز", "وقت الحجز", "اسم الملعب", "اسم الحاجز", "إسممستخدم"]}
+                tableHead={["رقم الحجز", "وقت الحجز", "إسم الملعب", "اسم صاحب الحجز", "إسمم الستخدم"]}
                 tableData={tableRows}
               />
             }

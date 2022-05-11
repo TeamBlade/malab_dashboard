@@ -12,6 +12,8 @@ import { RHFInput } from 'react-hook-form-input';
 import Select from "react-select";
 import { createPlayground, updatePlayground } from "../../api/playgrounds";
 import { getServiceDropdown } from '../../api/services';
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import './forms.css'
 
 const styles = theme => ({
     container: {
@@ -41,7 +43,7 @@ function PlaygroundForm({ ...props }) {
 
 
     const [formData, setFormData] = useState(null);
-    if(forUpdate) {
+    if (forUpdate) {
 
         data.dayStartTime = data.dayShift.start;
         data.dayEndTime = data.dayShift.end;
@@ -149,41 +151,31 @@ function PlaygroundForm({ ...props }) {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات الملعب" : "إضافة ملعب جديد"}</DialogTitle>
                 <DialogContent>
-                    <Grid container>
-                        <ItemGrid sx={12} md={6}>
+                    <div className="row">
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="name"
-                                    label="إسم الملعب   "
-                                    type="text"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="name">إسم الملعب</label>
+                                    <input type="text" className="form-control" id="name" placeholder="إسم الملعب" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="name"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
-                        <ItemGrid sx={12} md={6}>
+                        </div>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="description"
-                                    label="المدينة"
-                                    type="text"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="description">الوصف</label>
+                                    <input type="text" className="form-control" id="description" placeholder="الوصف" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="description"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={12}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
                                 as={<Select
                                     isMulti
@@ -194,9 +186,9 @@ function PlaygroundForm({ ...props }) {
                                 name="services"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <Controller
                                 name="images"
                                 control={control}
@@ -207,136 +199,101 @@ function PlaygroundForm({ ...props }) {
 
                                 />}
                             />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="city"
-                                    label="المدينة"
-                                    type="text"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="city">المدينة</label>
+                                    <input type="text" className="form-control" id="city" placeholder="الإسم الأول" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="city"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="price"
-                                    label="السعر"
-                                    type="text"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="price">السعر</label>
+                                    <input type="text" className="form-control" id="price" placeholder="السعر" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="price"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="type"
-                                    label="النوع"
-                                    type="text"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="type">النوع</label>
+                                    <input type="text" className="form-control" id="type" placeholde="النوع" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="type"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={4}>
+                        <div className="col-md-6 col-sm-12">
                             <RHFInput
-                                as={<TextField
-                                    id="dayStartTime"
-                                    label="زمن بداية الوردية النهارية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="dayStartTime">زمن بداية الوردية النهارية</label>
+                                    <input type="time" className="form-control" id="dayStartTime" placeholder="زمن بداية الوردية النهارية" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="dayStartTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="dayEndTime"
-                                    label="زمن إنتهاء الوردية النهارية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="dayEndTime">زمن إنتهاء الوردية النهارية</label>
+                                    <input type="time" className="form-control" id="dayEndTime" placeholder="زمن إنتهاء الوردية النهارية" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="dayEndTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="nightStartTime"
-                                    label="زمن بداية الوردية المسائية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="nightStatTime">زمن بداية الوردية المسائية</label>
+                                    <input type="time" className="form-control" id="nightStatTime" placeholder="زمن بداية الوردية المسائية" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="nightStartTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
 
 
-                        <ItemGrid sx={12} md={6}>
+                        <div className='col-md-6 col-sm-12'>
                             <RHFInput
-                                as={<TextField
-                                    id="nightEndTime"
-                                    label="زمن إنتهاء الوردية المسائية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="nightEndTime">زمن نهاية الوردية المسائية</label>
+                                    <input type="time" className="form-control" id="nightEndTime" placeholder="زمن نهاية الوردية المسائية" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="nightEndTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
-                    </Grid>
+                        </div>
+                    </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <button className='btn btn-outline me-4' onClick={handleClose}>
                         إلغاء
-                    </Button>
-                    <Button type="submit" color="primary">
+                    </button>
+                    <button className='btn btn-primary' type="submit">
                         حفظ
-                    </Button>
+                    </button>
                 </DialogActions>
             </form>
         </Dialog>

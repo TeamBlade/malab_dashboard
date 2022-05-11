@@ -4,7 +4,8 @@ import { Button, Grid } from "material-ui";
 import React, { useEffect, useState } from "react";
 import OwnersForm from 'views/forms/ownersForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
-
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import './lists.css'
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -85,21 +86,22 @@ function TableList(props) {
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
+            headerColor='green'
             cardTitle={
               <Grid container>
 
                 <ItemGrid xs={11} md={11}>
-                  قائمه إصحاب الملاعب
+                  قائمه أصحاب الملاعب
                 </ItemGrid>
                 <ItemGrid xs={1} md={1}>
-                  <Button color="primary" onClick={() => {
+                  <button className='btn btn-outline-primary' onClick={() => {
                     setOpen(true);
                     setForUpdate(false)
-                  }}>Create</Button>
+                  }}>إنشاء</button>
                 </ItemGrid>
               </Grid>
             }
-            cardSubtitle="من الاحدث الي الاقدم"
+            cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <Table
                 showEditButton={true}

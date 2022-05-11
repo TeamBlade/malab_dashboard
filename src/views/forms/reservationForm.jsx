@@ -11,6 +11,8 @@ import { RHFInput } from 'react-hook-form-input';
 import Select from 'react-select';
 import { createBooking } from "../../api/booking";
 import { getPlaygroundsDropdown } from '../../api/playgrounds';
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import './forms.css';
 
 const styles = theme => ({
     container: {
@@ -70,7 +72,7 @@ function ReservationForm({ ...props }) {
                 <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات صاحب الملعب" : "إضافة صاحب مفعب جديد"}</DialogTitle>
                 <DialogContent>
                     <Grid container>
-                        <ItemGrid sx={12} md={4}>
+                        <div className="col-md-6 col-sm-12">
 
                             <RHFInput
                                 as={<Select
@@ -80,75 +82,52 @@ function ReservationForm({ ...props }) {
                                 name="playground"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
-                        <ItemGrid sx={12} md={4}>
-
-
+                        </div>
+                        <div className="col-md-6 col-sm-12">
                             <RHFInput
-                                as={<TextField
-                                    id="date"
-                                    label="التاريخ"
-                                    type="date"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="date">التاريخ</label>
+                                    <input type="date" className="form-control" id="date" placeholder="التاريخ" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="date"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
-                        <ItemGrid sx={12} md={4}>
+                        </div>
+                        <div className="col-md-6 col-sm-12">
 
                             <RHFInput
-                                as={<TextField
-                                    id="time"
-                                    label="وقت البداية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    inputProps={{
-                                        step: 60, // 5 min
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="startTime">زمن البداية</label>
+                                    <input type="time" className="form-control" id="startTime" placeholder="الإسم الأول" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="startTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
-                        <ItemGrid sx={12} md={4}>
+                        </div>
+                        <div className="col-md-6 col-sm-12">
 
                             <RHFInput
-                                as={<TextField
-                                    id="time"
-                                    label="وقت النهاية"
-                                    type="time"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    inputProps={{
-                                        step: 60, // 5 min
-                                    }}
-                                />}
+                                as={<div className="form-group">
+                                    <label htmlFor="endTime">زمن الإمنهاء</label>
+                                    <input type="time" className="form-control" id="endTime" placeholder="زمن الإمنهاء" />
+                                </div>}
                                 rules={{ required: true }}
                                 name="endTime"
                                 register={register}
                                 setValue={setValue} />
-                        </ItemGrid>
+                        </div>
                     </Grid>
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <button className='btn btn-outline me-4' onClick={handleClose}>
                         إلغاء
-                    </Button>
-                    <Button type="submit" color="primary">
+                    </button>
+                    <button className='btn btn-primary' type="submit">
                         حفظ
-                    </Button>
+                    </button>
                 </DialogActions>
             </form>
         </Dialog>

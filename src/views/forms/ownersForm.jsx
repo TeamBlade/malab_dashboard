@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { RHFInput } from 'react-hook-form-input';
 import { addUser, updateUser } from "../../api/admin";
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import './forms.css';
 
 const styles = theme => ({
   container: {
@@ -43,7 +45,7 @@ function OwnersForm(props) {
     password: '',
     id: ''
   }
-  const { control, setValue, register, handleSubmit } = useForm({
+  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm({
     defaultValues,
     shouldUnregister: false
   });
@@ -103,41 +105,33 @@ function OwnersForm(props) {
       <form onSubmit={handleSubmit(onSubmit)} >
         <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات صاحب الملعب" : "إضافة صاحب مفعب جديد"}</DialogTitle>
         <DialogContent>
-          <Grid container>
-
-            <ItemGrid sx={12} md={4}>
+          <div className='row'>
+            <div className='col-md-6 col-sm-12'>
               <RHFInput
-                as={<TextField
-                  id="firstName"
-                  label="الإسم الأول"
-                  type="text"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />}
+                as={
+                  <div className="form-group">
+                    <label htmlFor="firstName">الإسم الأول</label>
+                    <input type="text" className="form-control" id="firstName" placeholder="الإسم الأول" />
+                    {errors.firstName && <span>هذا الحقل مطلوب</span>}
+                  </div>}
                 rules={{ required: true }}
                 name="firstName"
                 register={register}
                 setValue={setValue} />
-            </ItemGrid>
-            <ItemGrid sx={12} md={4}>
+            </div>
+            <div className='col-md-6 col-sm-12'>
               <RHFInput
-                as={<TextField
-                  id="lastName"
-                  label="الإسم الثاني"
-                  type="text"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />}
+                as={<div className="form-group">
+                  <label htmlFor="lastName">الإسم الأخير</label>
+                  <input type="text" className="form-control" id="lastName" placeholder="الإسم الأخير" />
+                  {errors.lastName && <span>هذا الحقل مطلوب</span>}
+                </div>}
                 rules={{ required: true }}
                 name="lastName"
                 register={register}
                 setValue={setValue} />
-            </ItemGrid>
-            <ItemGrid sx={12} md={4}>
+            </div>
+            <div className='col-md-6 col-sm-12'>
               <Controller
                 name="image"
                 control={control}
@@ -147,82 +141,70 @@ function OwnersForm(props) {
 
                 />}
               />
-            </ItemGrid>
-            <ItemGrid sx={12} md={4}>
+            </div>
+            <div className='col-md-6 col-sm-12'>
               <RHFInput
-                as={<TextField
-                  id="city"
-                  label="المدينة"
-                  type="text"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />}
+                as={<div className="form-group">
+                  <label htmlFor="city">المدينة</label>
+                  <input type="text" className="form-control" id="city" placeholder="المدينة" />
+                  {errors.city && <span>هذا الحقل مطلوب</span>}
+
+                </div>}
                 rules={{ required: true }}
                 name="city"
                 register={register}
                 setValue={setValue} />
-            </ItemGrid>
-            <ItemGrid sx={12} md={4}>
+            </div>
+            <div className='col-md-6 col-sm-12'>
               <RHFInput
-                as={<TextField
-                  id="phone"
-                  label="رقم الهاتف"
-                  type="text"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />}
+                as={<div className="form-group">
+                  <label htmlFor="phone">رقم الهاتف</label>
+                  <input type="text" className="form-control" id="phone" placeholder="رقم الهاتف" />
+                  {errors.phone && <span>هذا الحقل مطلوب</span>}
+
+                </div>}
                 rules={{ required: true }}
                 name="phone"
                 register={register}
                 setValue={setValue} />
-            </ItemGrid>
-            <ItemGrid sx={12} md={4}>
+            </div>
+            <div className='col-md-6 col-sm-12'>
               <RHFInput
-                as={<TextField
-                  id="email"
-                  label="البريد الإلكتروني"
-                  type="text"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />}
+                as={<div className="form-group">
+                  <label htmlFor="email">البريد الإلكتروني</label>
+                  <input type="email" className="form-control" id="email" placeholder="البريد الإلكتروني" />
+                  {errors.email && <span>هذا الحقل مطلوب</span>}
+
+                </div>}
                 rules={{ required: true }}
                 name="email"
                 register={register}
                 setValue={setValue} />
-            </ItemGrid>
+            </div>
             {(!forUpdate) ?
-              <ItemGrid sx={12} md={4}>
+              <div className='col-md-6 col-sm-12'>
                 <RHFInput
-                  as={<TextField
-                    id="password"
-                    label="كلمة السر"
-                    type="password"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />}
+                  as={<div className="form-group">
+                    <label htmlFor="password">لمة المرور</label>
+                    <input type="password" className="form-control" id="password" placeholder="كلمة المرور" />
+                    {errors.password && <span>هذا الحقل مطلوب</span>}
+
+                  </div>}
                   rules={{ required: true }}
                   name="password"
                   register={register}
                   setValue={setValue} />
-              </ItemGrid> : <div></div>
+              </div> : <div></div>
             }
-          </Grid>
+          </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <button className='btn btn-outline me-4' onClick={handleClose}>
             إلغاء
-          </Button>
-          <Button type="submit" color="primary">
+          </button>
+          <button className='btn btn-primary' type="submit">
             حفظ
-          </Button>
+          </button>
         </DialogActions>
       </form>
     </Dialog>

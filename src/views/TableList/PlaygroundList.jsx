@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { deletePlayground, getAllPlaygrounds, getPlaygroundsByOwner } from '../../api/playgrounds';
 import { getUserState } from '../../state/user';
 import PlaygroundsForm from 'views/forms/playgroundForm'
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -92,20 +94,21 @@ const TableList = ({ ...props }) => {
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
+            headerColor='green'
             cardTitle={
               <Grid container>
-
                 <ItemGrid xs={11} md={11}>
-
                   قائمه الملاعب
-
                 </ItemGrid>
                 <ItemGrid xs={1} md={1}>
-                  <Button onClick={() => { setOpen(true) }}>Create</Button>
+                  <button className='btn btn-outline-primary' onClick={() => {
+                    setOpen(true)
+                    setForUpdate(false)
+                  }}>إنشاء</button>
                 </ItemGrid>
               </Grid>
             }
-            cardSubtitle="من الاحدث الي الاقدم"
+            cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <Table
                 handleDeleteClick={handleDeleteClick}
@@ -113,7 +116,7 @@ const TableList = ({ ...props }) => {
                 showDelete={getUserState().isAdmin}
                 showEdit={getUserState().isAdmin}
                 tableHeaderColor="primary"
-                tableHead={["الرقم التعريفي	", "اسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
+                tableHead={["الرقم التعريفي	", "إسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
                 tableData={tableRows}
               />
             }
