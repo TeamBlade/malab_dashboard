@@ -1,14 +1,10 @@
-import TextField from '@material-ui/core/TextField';
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { login } from "../api/users"
 import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from 'react-router-dom';
+import { login } from "../api/users";
 import { setUserState } from '../state/user';
-import { ItemGrid } from "components"
-import { Grid } from 'material-ui';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import App from 'views/Dashboard/Dashboard'
-import './login.css'
+import './login.css';
 const styles = theme => ({
     container: {
         display: 'flex',

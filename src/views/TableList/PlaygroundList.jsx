@@ -6,6 +6,9 @@ import { deletePlayground, getAllPlaygrounds, getPlaygroundsByOwner } from '../.
 import { getUserState } from '../../state/user';
 import PlaygroundsForm from 'views/forms/playgroundForm'
 import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import { CustomInput, IconButton as SearchButton } from "components";
+import { Search } from "@material-ui/icons";
 
 const styles = theme => ({
   container: {
@@ -17,6 +20,10 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+  margin: headerLinksStyle.margin,
+  search: headerLinksStyle.seach,
+  seachButton: headerLinksStyle.seachButton,
+  searchIcon: headerLinksStyle.searchIcon
 });
 
 const TableList = ({ ...props }) => {
@@ -34,25 +41,32 @@ const TableList = ({ ...props }) => {
     if (!data)
       data = []
     let ref = 1;
-    const rows = data.map(v => [`${ref++}`, v.name, v.city,])
+    const rows = data.map(v => [`${ref++}`, v.name, v.city, v.ownerName])
     setTableRows(rows)
     setPlaygroundlist(data)
   }
-  const fetchData = () => {
+  const fetchData = (signal) => {
     if (getUserState().isAdmin)
-      getAllPlaygrounds().then(data => {
+      getAllPlaygrounds(pageNumber, pageSize, signal).then(data => {
         loadData(data)
       });
     else {
-      getPlaygroundsByOwner(getUserState().id).then(data => loadData(data))
+      getPlaygroundsByOwner(signal, getUserState().id).then(data => loadData(data))
     }
   }
 
 
   useEffect(() => {
-    fetchData()
+    const controller = new window.AbortController();
+    fetchData(controller)
+    return () => { controller.abort() }
   }, [])
 
+  useEffect(() => {
+    const controller = new window.AbortController();
+    fetchData(controller)
+    return () => { controller.abort() }
+  }, [pageNumber])
 
   const refreshTable = () => {
     fetchData()
@@ -110,19 +124,43 @@ const TableList = ({ ...props }) => {
             }
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
-              <Table
-                handleDeleteClick={handleDeleteClick}
-                handleEditClick={handleEditClick}
-                showDelete={getUserState().isAdmin}
-                showEdit={getUserState().isAdmin}
-                tableHeaderColor="primary"
-                tableHead={["الرقم التعريفي	", "إسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
-                tableData={tableRows}
-              />
+              <div>
+                <CustomInput
+                  formControlProps={{
+                    className: classes.margin + " " + classes.search
+                  }}
+                  inputProps={{
+                    placeholder: "البحث بإسم الملعب",
+                    inputProps: {
+                      "aria-label": "البحث بإسم الملعب"
+                    }
+                  }}
+                />
+                <SearchButton
+                  color="white"
+                  aria-label="edit"
+                  customClass={classes.margin + " " + classes.searchButton}
+                >
+                  <Search className={classes.searchIcon} />
+                </SearchButton>
+                <Table
+                  handleDeleteClick={handleDeleteClick}
+                  handleEditClick={handleEditClick}
+                  showDelete={getUserState().isAdmin}
+                  showEdit={getUserState().isAdmin}
+                  tableHeaderColor="primary"
+                  tableHead={["الرقم التعريفي	", "إسم الملعب	", "موقع الملعب	", "صاحب الملعب"]}
+                  tableData={tableRows}
+                />
+              </div>
             }
           />
         </ItemGrid>
+        <ItemGrid>
+          <Button onClick={() => prevPage()}>الصفحة السابقة</Button>
+          <Button onClick={() => nextPage()}>الصفحة التالية</Button>
 
+        </ItemGrid>
       </Grid>
       <div>
         {open ? <PlaygroundsForm data={formData} forUpdate={forUpdate} refreshTable={refreshTable} handleClose={handleClose} /> : null}

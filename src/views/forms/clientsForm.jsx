@@ -137,11 +137,17 @@ function OwnersForm(props) {
                             <Controller
                                 name="image"
                                 control={control}
-                                render={({ field }) => <input
-                                    type="file"
-                                    onChange={(e) => setSelectedRow(e.target.files[0])}
-
-                                />}
+                                render={({ field }) =>
+                                    <div className="form-group">
+                                        <input
+                                            type="file"
+                                            className='form-control hidden'
+                                            id="imageUpload"
+                                            onChange={(e) => setSelectedRow(e.target.files[0])}
+                                        />
+                                        <label htmlFor='imageUpload' className='btn btn-info'>إختر ملف صورة</label>
+                                    </div>
+                                }
                             />
                         </div>
                         <div className='col-md-6 col-sm-12'>
@@ -174,7 +180,7 @@ function OwnersForm(props) {
                             <RHFInput
                                 as={<div className="form-group">
                                     <label htmlFor="email">البريد الإلكتروني</label>
-                                    <input type="email" className="form-control" id="email" placeholder="البريد الإلكتروني" />
+                                    <input type="text" className="form-control" id="email" placeholder="البريد الإلكتروني" />
                                     {errors.email && <span>هذا الحقل مطلوب</span>}
 
                                 </div>}

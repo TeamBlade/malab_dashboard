@@ -1,8 +1,9 @@
 import axios from "axios";
 
-async function getAllPlaygrounds() {
+async function getAllPlaygrounds(pageNumber,pageSize,signal) {
+  const params = `pageNumber=${pageNumber}&pageSize=${pageSize}`
     try {
-        const resBody = await axios.get(`/Playgrounds`)
+        const resBody = await axios.get(`/Playgrounds?params`, {signal})
         return resBody
     } catch (e) { }
 
@@ -56,16 +57,25 @@ async function createPlayground(playground) {
 
 }
 
-async function getPlaygroundsByOwner(ownerId) {
+async function getPlaygroundsByOwner(signal, ownerId) {
     try {
 
-        const resBody = await axios.get(`/owners/playgrounds/`)
+        const resBody = await axios.get(`/owners/playgrounds/`, {signal})
         return resBody
     } catch (e) { }
 
 
 }
 
+async function getPendingPlaygrounds(id) {
+    try {
+
+         let resBody = await axios.get(`/Playgrounds`)
+         let ref = 1;
+         resBody = resBody.map(v => [`${ref++}`, v.name, v.city, v.ownerName])
+         return resBody;
+    } catch (e) { }
+}
 
 export {
     getAllPlaygrounds,
@@ -74,5 +84,6 @@ export {
     updatePlayground,
     createPlayground,
     getPlaygroundsByOwner,
-    getPlaygroundsDropdown
+    getPlaygroundsDropdown,
+    getPendingPlaygrounds
 }

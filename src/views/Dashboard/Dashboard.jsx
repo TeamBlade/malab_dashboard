@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import PropTypes from "prop-types";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
@@ -33,19 +33,28 @@ import {
 } from "variables/charts";
 
 import dashboardStyle from "assets/jss/material-dashboard-react/dashboardStyle";
+import { getPendingOwners } from '../../api/owners'
+import { getPendingPlaygrounds } from '../../api/playgrounds'
 
-class Dashboard extends React.Component {
-  state = {
-    value: 0
-  };
-  handleChange = (event, value) => {
-    this.setState({ value });
+function Dashboard(props) {
+  const [value, setValue] = useState(0)
+  const [pendingPlaygrounds, setPendingPlaygrounds] = useState([])
+  const [pendingOwners, setPendingOwners] = useState([])
+  useEffect(() => {
+    getPendingPlaygrounds().then(data => setPendingPlaygrounds(data))  
+    getPendingOwners().then(data => setPendingOwners(data))
+    return () => {
+    }
+  }, [])
+
+  const handleChange = (event, value) => {
+    setValue(value);
   };
 
-  handleChangeIndex = index => {
-    this.setState({ value: index });
+  const handleChangeIndex = index => {
+    setValue(index);
   };
-  render() {
+
     return (
       <div>
         <Grid container>
@@ -164,7 +173,7 @@ class Dashboard extends React.Component {
             </ItemGrid>*/}
         </Grid>
         <Grid container>
-         {/* <ItemGrid xs={12} sm={12} md={6}>
+          {/* <ItemGrid xs={12} sm={12} md={6}>
             <TasksCard />
           </ItemGrid>*/}
           <ItemGrid xs={12} sm={12} md={6}>
@@ -175,15 +184,10 @@ class Dashboard extends React.Component {
               content={
                 <Table
                   tableHeaderColor="primary"
+                  hideEdit={true}
+                  hideDelete={true}
                   tableHead={["الرقم التعريفي", "الاسم", "رقم الهاتف", "العنوان"]}
-                  tableData={[
-                    ["1", "يوسف الشيخ ", "0912341231321,", "الرياض"],
-                    ["2", "علي حمد ", "0912341231321,", "المدينه"],
-                    ["3", "معاذ عثمان ", "0912341231321,", "القسيم"],
-                    ["4", "مهدي عبدالله ", "0912341231321,", "جده"],
-
-
-                  ]}
+                  tableData={pendingOwners}
                 />
               }
             />
@@ -195,15 +199,11 @@ class Dashboard extends React.Component {
               cardSubtitle="Pending Playgrounds"
               content={
                 <Table
+                hideEdit={true}
+                hideDelete={true}
                   tableHeaderColor="danger"
                   tableHead={["الرقم التعريفي", "اسم الملعب", "موقع الملعب", "صاحب الملعب"]}
-                  tableData={[
-                    ["1", "الفسيم ", "ملعب القسيم", "علي عثمان"],
-                    ["2", "جده ", "ملعب جده", "محمد الفاتح"],
-                    ["3", "المدينه ", "ملعب المدينه", "احمد علي"],
-                    ["4", "الرياض ", "ملعب الرياض", "ود الزين"],
-
-                  ]}
+                  tableData={pendingPlaygrounds}
                 />
               }
             />
@@ -212,7 +212,7 @@ class Dashboard extends React.Component {
       </div>
     );
   }
-}
+
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired

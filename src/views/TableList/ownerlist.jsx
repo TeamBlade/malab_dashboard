@@ -6,6 +6,10 @@ import OwnersForm from 'views/forms/ownersForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
 import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import './lists.css'
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import { CustomInput, IconButton as SearchButton } from "components";
+import { Search } from "@material-ui/icons";
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -16,6 +20,11 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+  margin: headerLinksStyle.margin,
+  search: headerLinksStyle.seach,
+  seachButton: headerLinksStyle.seachButton,
+  searchIcon: headerLinksStyle.searchIcon
+
 });
 
 
@@ -29,8 +38,8 @@ function TableList(props) {
   const [forUpdate, setForUpdate] = useState(false);
   const [formData, setFormData] = useState(null)
 
-  const fetchData = () => {
-    getAllUsers(pageNumber, pageSize, "owner").then(data => {
+  const fetchData = (cancel) => {
+    getAllUsers(pageNumber, pageSize, "owner", cancel).then(data => {
       if (!data)
         data = []
       setClientList(data)
@@ -41,8 +50,16 @@ function TableList(props) {
   }
 
   useEffect(() => {
-    fetchData()
+    const controller = new window.AbortController();
+    fetchData(controller)
+    return () => { controller.abort() }
   }, [pageNumber])
+
+  useEffect(() => {
+    const controller = new window.AbortController();
+    fetchData(controller)
+    return () => { controller.abort() }
+  }, [])
 
   const refreshTable = () => {
     fetchData()
@@ -103,15 +120,35 @@ function TableList(props) {
             }
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
-              <Table
-                showEditButton={true}
-                showDeleteButton={false}
-                handleDeleteClick={handleDeleteClick}
-                handleEditClick={handleEditClick}
-                tableHeaderColor="primary"
-                tableHead={["اسم صاحب الملعب", "رقم الهاتف", "المدينه", "الايميل"]}
-                tableData={tableRows}
-              />
+              <div>
+                <CustomInput
+                  formControlProps={{
+                    className: classes.margin + " " + classes.search
+                  }}
+                  inputProps={{
+                    placeholder: "البحث بإسم صاحب الملعب",
+                    inputProps: {
+                      "aria-label": "البحث بإسم صاحب الملعب"
+                    }
+                  }}
+                />
+                <SearchButton
+                  color="white"
+                  aria-label="edit"
+                  customClass={classes.margin + " " + classes.searchButton}
+                >
+                  <Search className={classes.searchIcon} />
+                </SearchButton>
+                <Table
+                  showEditButton={true}
+                  showDeleteButton={false}
+                  handleDeleteClick={handleDeleteClick}
+                  handleEditClick={handleEditClick}
+                  tableHeaderColor="primary"
+                  tableHead={["اسم صاحب الملعب", "رقم الهاتف", "المدينه", "الايميل"]}
+                  tableData={tableRows}
+                />
+              </div>
             }
           />
         </ItemGrid>

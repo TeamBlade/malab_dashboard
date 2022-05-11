@@ -17,8 +17,8 @@ import tasksStyle from "assets/jss/material-dashboard-react/tasksStyle.jsx";
 import { Edit, Close, Check } from "@material-ui/icons";
 
 function CustomTable({ ...props }) {
-  const { showBookingActions, classes, tableHead, tableData, 
-    tableHeaderColor, handleEditClick, handleDeleteClick,reservationList, handleAcceptClick, handleRejectClick } = props;
+  const { showBookingActions, classes, tableHead, tableData, hideDelete, hideEdit,
+    tableHeaderColor, handleEditClick, handleDeleteClick, reservationList, handleAcceptClick, handleRejectClick } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -59,16 +59,14 @@ function CustomTable({ ...props }) {
 
 
                 <TableCell className={classes.tableActions}>
-                  <Tooltip
+                  {!hideEdit ? <Tooltip
                     id="tooltip-top"
                     title="تعديل اليانات "
                     placement="top"
-                    classes={{ tooltip: classes.tooltip }}
-                  >
+                    classes={{ tooltip: classes.tooltip }}>
                     <IconButton
                       aria-label="Edit"
                       onClick={() => handleEditClick({ prop, key })}
-
                       className={classes.tableActionButton}
                     >
                       <Edit
@@ -77,25 +75,23 @@ function CustomTable({ ...props }) {
                         }
                       />
                     </IconButton>
-                  </Tooltip>
-                  <Tooltip
+                  </Tooltip> : null}
+                  {!hideDelete ? <Tooltip
                     id="tooltip-top-start"
                     title="الحذف"
                     placement="top"
-                    classes={{ tooltip: classes.tooltip }}
-                  >
+                    classes={{ tooltip: classes.tooltip }}>
                     <IconButton
                       aria-label="Close"
                       onClick={() => handleDeleteClick({ prop, key })}
-                      className={classes.tableActionButton}
-                    >
+                      className={classes.tableActionButton}>
                       <Close
                         className={
                           classes.tableActionButtonIcon + " " + classes.close
                         }
                       />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> : null}
                   {showBookingActions && reservationList[key].status == 'pending' ? <Tooltip
                     id="tooltip-top-start"
                     title="موافقة"
@@ -109,7 +105,7 @@ function CustomTable({ ...props }) {
                     >موافقة
                     </Button>
                   </Tooltip> : null}
-                  
+
                   {showBookingActions && reservationList[key].status == 'pending' ? <Tooltip
                     id="tooltip-top-start"
                     title="موافقة"
@@ -124,11 +120,6 @@ function CustomTable({ ...props }) {
                     </Button>
                   </Tooltip> : null}
                 </TableCell>
-
-
-
-
-
               </TableRow>
             );
           })}

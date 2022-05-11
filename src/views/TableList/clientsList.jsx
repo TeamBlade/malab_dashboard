@@ -7,6 +7,9 @@ import ClientsForm from 'views/forms/clientsForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
 import { getUserState } from '../../state/user';
 import 'bootstrap/dist/css/bootstrap.rtl.min.css';
+import { Search } from "@material-ui/icons";
+import { CustomInput, IconButton as SearchButton } from "components";
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
 
 const styles = theme => ({
   container: {
@@ -18,6 +21,11 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+
+  margin: headerLinksStyle.margin,
+  search: headerLinksStyle.seach,
+  seachButton: headerLinksStyle.seachButton,
+  searchIcon: headerLinksStyle.searchIcon
 });
 
 
@@ -108,15 +116,35 @@ function TableList(props) {
               }
               cardSubtitle="من الأحدث إلى الأقدم"
               content={
-                <Table
-                  showEditButton={true}
-                  showDeleteButton={false}
-                  handleDeleteClick={handleDeleteClick}
-                  handleEditClick={handleEditClick}
-                  tableHeaderColor="primary"
-                  tableHead={["إسم العميل", "رقم الهاتف", "المدينه", "الإيميل"]}
-                  tableData={tableRows}
-                />
+                <div>
+                  <CustomInput
+                    formControlProps={{
+                      className: classes.margin + " " + classes.search
+                    }}
+                    inputProps={{
+                      placeholder: "البحث بإسم العميل",
+                      inputProps: {
+                        "aria-label": "البحث بإسم العميل"
+                      }
+                    }}
+                  />
+                  <SearchButton
+                    color="white"
+                    aria-label="edit"
+                    customClass={classes.margin + " " + classes.searchButton}
+                  >
+                    <Search className={classes.searchIcon} />
+                  </SearchButton>
+                  <Table
+                    showEditButton={true}
+                    showDeleteButton={false}
+                    handleDeleteClick={handleDeleteClick}
+                    handleEditClick={handleEditClick}
+                    tableHeaderColor="primary"
+                    tableHead={["إسم العميل", "رقم الهاتف", "المدينه", "الإيميل"]}
+                    tableData={tableRows}
+                  />
+                </div>
               }
             />
           </ItemGrid>

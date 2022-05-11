@@ -33,7 +33,7 @@ class HeaderLinks extends React.Component {
     const { open } = this.state;
     return (
       <div>
-        <CustomInput
+        {/* <CustomInput
           formControlProps={{
             className: classes.margin + " " + classes.search
           }}
@@ -60,7 +60,7 @@ class HeaderLinks extends React.Component {
           <Hidden mdUp>
             <p className={classes.linkText}>Dashboard</p>
           </Hidden>
-       </IconButton>*/}
+       </IconButton>
         <Manager style={{ display: "inline-block" }}>
           <Target>
             <IconButton
@@ -131,7 +131,7 @@ class HeaderLinks extends React.Component {
           <Hidden mdUp>
             <p className={classes.linkText}>Profile</p>
           </Hidden>
-        </IconButton>
+        </IconButton> */}
       </div>
     );
   }

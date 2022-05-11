@@ -1,8 +1,9 @@
 import axios from "axios";
 
-async function getAllBooking() {
+async function getAllBooking(pageNumber, pageSize) {
+  const params = `pageNumber=${pageNumber}&pageSize=${pageSize}`
   try {
-    const resBody = await axios.get(`/booking`);
+    const resBody = await axios.get(`/booking?${params}`);
     return resBody;
   } catch (e) {}
 }

@@ -192,12 +192,18 @@ function PlaygroundForm({ ...props }) {
                             <Controller
                                 name="images"
                                 control={control}
-                                render={({ field }) => <input
-                                    type="file"
-                                    multiple='multiple'
-                                    onChange={(e) => { ; setselectedImages(e.target.files) }}
-
-                                />}
+                                render={({ field }) =>
+                                    <div className="form-group">
+                                        <input
+                                            type="file"
+                                            className='form-control hidden'
+                                            id="imageUpload"
+                                            multiple='multiple'
+                                            onChange={(e) => setselectedImages(e.target.files)}
+                                        />
+                                        <label htmlFor='imageUpload' className='btn btn-info'>إختر ملف صورة</label>
+                                    </div>
+                                }
                             />
                         </div>
 

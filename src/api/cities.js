@@ -33,14 +33,15 @@ async function updateCity(id) {
         const resBody = await axios.get(`/Cities/${id}`)
         return resBody;
     } catch (e) { }
-
-
 }
+
+
 
 
 export {
     getAllCities,
     getCityById,
     deleteCity,
-    updateCity
+    updateCity,
+  
 }
