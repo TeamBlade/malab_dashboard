@@ -26,11 +26,20 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use(
   function (response) {
+    console.log(response.data);
     if (response && response.data.status === "success") {
-      return response.data.data;
-    } else return [];
+      console.log(response.data);
+      if (response.data.data) return response.data.data;
+      else return [];
+    } else {
+      console.error(response.data);
+      return [];
+    }
   },
-  (err) => []
+  (err) => {
+    console.error(err);
+    return [];
+  }
 );
 
 ReactDOM.render(<Router />, document.getElementById("root"));

@@ -1,12 +1,12 @@
 import axios from "axios";
 
-async function getAllUsers(pageNumber, pageSize, type, cancel) {
-  const params = `?pageSize=${pageSize}&pageNumber=${pageNumber}&type=${type}`;
+async function getAllUsers(pageNumber, pageSize, type, cancel, filter) {
+  let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}&type=${type}`;
+  if(filter)
+    params = params + `&filter=${filter}`
 
   try {
-    const resBody = await axios.get(`/v2/admin/clients${params}`, {
-      signal: cancel,
-    });
+      const resBody = await axios.get(`/v2/admin/clients${params}`);
     return resBody;
   } catch (e) {}
 }

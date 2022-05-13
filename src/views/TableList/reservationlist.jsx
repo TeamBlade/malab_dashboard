@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { Search } from "@material-ui/icons";
 import { CustomInput, IconButton as SearchButton } from "components";
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import { RHFInput } from 'react-hook-form-input';
+import { Controller, useForm } from "react-hook-form";
 
 const styles = theme => ({
   container: {
@@ -31,6 +33,7 @@ function TableList({ ...props }) {
   const [formData, setFormData] = useState(null)
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
+  const controller = new window.AbortController();
 
   const showBookingActions = getUserState().isAdmin
   const fetchData = (signal) => {
@@ -43,9 +46,9 @@ function TableList({ ...props }) {
       setTableRows(rows)
     })
   }
+  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
 
   useEffect(() => {
-    const controller = new window.AbortController();
     fetchData(controller)
     return () => { controller.abort() }
   }, [pageNumber])
@@ -58,7 +61,6 @@ function TableList({ ...props }) {
   const [initalFormData, setInitialFormData] = useState(null);
 
   useEffect(() => {
-    const controller = new window.AbortController();
     fetchData(controller)
     return () => { controller.abort() }
   }, [])
@@ -78,8 +80,10 @@ function TableList({ ...props }) {
 
   const handleEditClick = ({ prop, key }) => {
     const data = reservationList[key]
+
     setForUpdate(true)
     setFormData(data)
+    setOpen(true)
   }
 
   const handleDeleteClick = ({ prop, key }) => {
@@ -93,10 +97,17 @@ function TableList({ ...props }) {
     const id = reservationList[key]._id
     rejectBooking(id).then(res => { })
   }
+
+  const onSubmit = (data) => {
+    console.log(data)
+    getAllBooking(pageNumber, pageSize, controller, data).then(res => console.log(res))
+  }
+
   return (
     <div>
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
+
           <RegularCard
             headerColor='green'
             cardTitle={
@@ -115,28 +126,40 @@ function TableList({ ...props }) {
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <div>
-                <CustomInput
-                  formControlProps={{
-                    className: classes.margin + " " + classes.search
-                  }}
-                  inputProps={{
-                    placeholder: "البحث بإسم صاحب الحجز",
-                    inputProps: {
-                      "aria-label": "البحث بإسم صاحب الحجز"
-                    }
-                  }}
-                />
-                <SearchButton
-                  color="white"
-                  aria-label="edit"
-                  customClass={classes.margin + " " + classes.searchButton}
-                >
-                  <Search className={classes.searchIcon} />
-                </SearchButton>
+                <form onSubmit={handleSubmit(onSubmit)} >
+
+                  <RHFInput
+                    as={
+                      <CustomInput
+                        formControlProps={{
+                          className: classes.margin + " " + classes.search
+                        }}
+                        inputProps={{
+                          placeholder: "البحث بإسم صاحب الحجز",
+                          inputProps: {
+                            "aria-label": "البحث بإسم صاحب الحجز"
+                          }
+                        }}
+                      />}
+                    rules={{ required: true }}
+                    name="filter"
+                    register={register}
+                    setValue={setValue} />
+                  <SearchButton
+                    color="white"
+                    type='submit'
+                    aria-label="edit"
+                    customClass={classes.margin + " " + classes.searchButton}
+                  >
+                    <Search className={classes.searchIcon} />
+                  </SearchButton>
+                </form>
                 <Table
+                  hideEdit={true}
+                  hideDelete={true}
                   reservationList={reservationList}
                   handleDeleteClick={handleDeleteClick}
-                  handleEditCLick={handleEditClick}
+                  handleEditClick={handleEditClick}
                   showBookingActions={showBookingActions}
                   handleAcceptClick={handleAcceptClick}
                   handleRejectClick={handleRejectClick}

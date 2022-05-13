@@ -14,6 +14,8 @@ import { createPlayground, updatePlayground } from "../../api/playgrounds";
 import { getServiceDropdown } from '../../api/services';
 import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import './forms.css'
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 const styles = theme => ({
     container: {
@@ -40,17 +42,7 @@ function PlaygroundForm({ ...props }) {
 
 
     const [selectedImages, setselectedImages] = useState([]);
-
-
-    const [formData, setFormData] = useState(null);
-    if (forUpdate) {
-
-        data.dayStartTime = data.dayShift.start;
-        data.dayEndTime = data.dayShift.end;
-        data.nighStartTime = data.nightShift.start;
-        data.nightEndTime = data.nightShift.end;
-        data.services = data.services/*  */.map(x => ({ label: x.name, value: x._id }))
-    }
+    const [selectedService, setSelectedService] = useState('')
     const defaultValues = data || {
         name: '',
         description: '',
@@ -64,29 +56,8 @@ function PlaygroundForm({ ...props }) {
         type: ''
 
     }
-    const { control, setValue, register, handleSubmit } = useForm({
-        defaultValues,
-        shouldUnregister: false
-    });
-
-    const resetForm = () => {
-
-        const fieldsNames = [
-            'name',
-            'description',
-            'dayStartTime',
-            'dayEndTime',
-            'nightStartTime',
-            'nightEndTime',
-            'services',
-            'city',
-            'price',
-            'type'
-        ]
-        fieldsNames.forEach(field => setValue(field, ''))
-    }
-
     const onSubmit = _data => {
+        console.log(_data)
         console.log('forupdate', forUpdate)
         const formData = new FormData();
         for (const key of Object.keys(selectedImages))
@@ -104,7 +75,7 @@ function PlaygroundForm({ ...props }) {
         }))
         formData.append("type", _data.type)
         if (forUpdate) {
-            formData.append("id", _data["_id"])
+            formData.append("id", _data["id"])
             formData.append("dayShift", JSON.stringify({
                 id: data.dayShift._id,
                 start: _data.dayStartTime,
@@ -115,11 +86,14 @@ function PlaygroundForm({ ...props }) {
                 start: _data.nightStartTime,
                 end: _data.nightEndTime
             }))
+            console.log('true')
             updatePlayground(formData).then(res => {
                 refreshTable()
-                resetForm()
                 handleClose()
-            }).catch(e => console.log(e))
+            }).catch(e => {
+                handleClose()
+                console.log(e)
+            })
         }
         else {
             formData.append("dayShift", JSON.stringify({
@@ -132,12 +106,47 @@ function PlaygroundForm({ ...props }) {
             }))
             createPlayground(formData).then(res => {
                 refreshTable()
-                resetForm()
                 handleClose()
             })
         }
 
     }
+
+    const validate = (values, props) => {
+        const errors = {}
+        if (!values.name)
+            errors.name = 'Required'
+        if (!values.description)
+            errors.description = 'Required'
+        if (!values.dayStartTime)
+            errors.dayStartTime = 'Required'
+        if (!values.name)
+            errors.name = 'Required'
+        if (!values.dayEndTime)
+            errors.dayEndTime = 'Required'
+        if (!values.nightStartTime)
+            errors.nightStartTime = 'Required'
+        if (!values.nightEndTime)
+            errors.nightEndTime = 'Required'
+        if (!values.services)
+            errors.services = 'Required'
+        if (!values.city)
+            errors.city = 'Required'
+        if (!values.price)
+            errors.price = 'Required'
+        if (!values.type)
+            errors.type = 'Required'
+        console.log(values.services)
+        return errors
+    }
+    const formik = useFormik({
+        validate: validate,
+        initialValues: defaultValues,
+        onSubmit: values => {
+            console.log(values)
+            onSubmit(values)
+        },
+    });
 
     return (
         <Dialog
@@ -148,148 +157,154 @@ function PlaygroundForm({ ...props }) {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={formik.handleSubmit}>
                 <DialogTitle id="form-dialog-title">{forUpdate ? "تعديل بيانات الملعب" : "إضافة ملعب جديد"}</DialogTitle>
                 <DialogContent>
                     <div className="row">
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="name">إسم الملعب</label>
-                                    <input type="text" className="form-control" id="name" placeholder="إسم الملعب" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="name"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="name">إسم الملعب</label>
+                                <input type="text"
+                                    name='name'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.name}
+                                    className="form-control" id="name" placeholder="إسم الملعب" />
+                                {formik.errors.name && formik.touched.nmae && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="description">الوصف</label>
-                                    <input type="text" className="form-control" id="description" placeholder="الوصف" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="description"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="description">الوصف</label>
+                                <input type="text"
+                                    name='description'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.description}
+                                    className="form-control" id="description" placeholder="الوصف" />
+                                {formik.errors.description && formik.touched.description && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<Select
+                            <div className='form-group'>
+                                <label htmlFor="services">الخدمات</label>
+                                <Select
                                     isMulti
+                                    name='services'
                                     options={services}
-                                />}
-                                style={{ width: '100px' }}
-                                rules={{ required: true }}
-                                name="services"
-                                register={register}
-                                setValue={setValue} />
+                                    onChange={selectedOption => {
+                                        setSelectedService(selectedOption)
+                                        const list = selectedOption.map(m => m.value)
+                                        formik.setFieldValue("services", selectedOption)
+                                    }
+                                    }
+                                    value={formik.values.services}
+                                />
+                                {formik.errors.services && formik.touched.services && <span>هذا الحقل مطلوب</span>}
+
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <Controller
-                                name="images"
-                                control={control}
-                                render={({ field }) =>
-                                    <div className="form-group">
-                                        <input
-                                            type="file"
-                                            className='form-control hidden'
-                                            id="imageUpload"
-                                            multiple='multiple'
-                                            onChange={(e) => setselectedImages(e.target.files)}
-                                        />
-                                        <label htmlFor='imageUpload' className='btn btn-info'>إختر ملف صورة</label>
-                                    </div>
-                                }
-                            />
+
+                            <div className="d-flex flex-column">
+                                <span>صورة الملعب</span>
+                                <input
+                                    type="file"
+                                    name='images'
+                                    className='form-control hidden'
+                                    id="imageUpload"
+                                    multiple='multiple'
+                                    onChange={(e) => setselectedImages(e.target.files)}
+                                />
+                                <label htmlFor='imageUpload' className='btn btn-info'>إختر ملف صورة</label>
+                            </div>
+
+
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="city">المدينة</label>
-                                    <input type="text" className="form-control" id="city" placeholder="الإسم الأول" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="city"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="city">المدينة</label>
+                                <input type="text"
+                                    name='city'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.city}
+                                    className="form-control" id="city" placeholder="المدينة" />
+                                {formik.errors.city && formik.touched.city && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="price">السعر</label>
-                                    <input type="text" className="form-control" id="price" placeholder="السعر" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="price"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="price">السعر</label>
+                                <input type="text"
+                                    name='price'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.price}
+                                    className="form-control" id="price" placeholder="السعر" />
+                                {formik.errors.price && formik.touched.price && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="type">النوع</label>
-                                    <input type="text" className="form-control" id="type" placeholde="النوع" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="type"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="type">النوع</label>
+                                <input type="text"
+                                    name='type'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.type}
+                                    className="form-control" id="type" placeholde="النوع" />
+                                {formik.errors.type && formik.touched.type && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className="col-md-6 col-sm-12">
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="dayStartTime">زمن بداية الوردية النهارية</label>
-                                    <input type="time" className="form-control" id="dayStartTime" placeholder="زمن بداية الوردية النهارية" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="dayStartTime"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="dayStartTime">زمن بداية الوردية النهارية</label>
+                                <input type="time"
+                                    name='dayStartTime'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.dayStartTime}
+                                    className="form-control" id="dayStartTime" placeholder="زمن بداية الوردية النهارية" />
+                                {formik.errors.dayStartTime && formik.touched.dayStartTime && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="dayEndTime">زمن إنتهاء الوردية النهارية</label>
-                                    <input type="time" className="form-control" id="dayEndTime" placeholder="زمن إنتهاء الوردية النهارية" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="dayEndTime"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="dayEndTime">زمن إنتهاء الوردية النهارية</label>
+                                <input type="time"
+                                    name='dayEndTime'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.dayEndTime}
+                                    className="form-control" id="dayEndTime" placeholder="زمن إنتهاء الوردية النهارية" />
+                                {formik.errors.dayEndTime && formik.touched.dayEndTime && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="nightStatTime">زمن بداية الوردية المسائية</label>
-                                    <input type="time" className="form-control" id="nightStatTime" placeholder="زمن بداية الوردية المسائية" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="nightStartTime"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="nightStartTime">زمن بداية الوردية المسائية</label>
+                                <input type="time"
+                                    name='nightStartTime'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.nightStartTime}
+                                    className="form-control" id="nightStartTime" placeholder="زمن بداية الوردية المسائية" />
+                                {formik.errors.nightStartTime && formik.touched.nightStartTime && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
 
 
                         <div className='col-md-6 col-sm-12'>
-                            <RHFInput
-                                as={<div className="form-group">
-                                    <label htmlFor="nightEndTime">زمن نهاية الوردية المسائية</label>
-                                    <input type="time" className="form-control" id="nightEndTime" placeholder="زمن نهاية الوردية المسائية" />
-                                </div>}
-                                rules={{ required: true }}
-                                name="nightEndTime"
-                                register={register}
-                                setValue={setValue} />
+                            <div className="form-group">
+                                <label htmlFor="nightEndTime">زمن نهاية الوردية المسائية</label>
+                                <input type="time"
+                                    name='nightEndTime'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.nightEndTime}
+                                    className="form-control" id="nightEndTime" placeholder="زمن نهاية الوردية المسائية" />
+                                {formik.errors.nightEndTime && formik.touched.nightEndTime && <span>هذا الحقل مطلوب</span>}
+                            </div>
                         </div>
                     </div>
                 </DialogContent>

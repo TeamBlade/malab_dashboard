@@ -9,6 +9,8 @@ import './lists.css'
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
 import { CustomInput, IconButton as SearchButton } from "components";
 import { Search } from "@material-ui/icons";
+import { RHFInput } from 'react-hook-form-input';
+import { Controller, useForm } from "react-hook-form";
 
 const styles = theme => ({
   container: {
@@ -37,6 +39,7 @@ function TableList(props) {
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
   const [formData, setFormData] = useState(null)
+  const controller = new window.AbortController();
 
   const fetchData = (cancel) => {
     getAllUsers(pageNumber, pageSize, "owner", cancel).then(data => {
@@ -48,15 +51,14 @@ function TableList(props) {
       setTableRows(rows)
     })
   }
+  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
 
   useEffect(() => {
-    const controller = new window.AbortController();
     fetchData(controller)
     return () => { controller.abort() }
   }, [pageNumber])
 
   useEffect(() => {
-    const controller = new window.AbortController();
     fetchData(controller)
     return () => { controller.abort() }
   }, [])
@@ -81,8 +83,8 @@ function TableList(props) {
 
 
   const handleEditClick = ({ prop, key }) => {
-    const data = clientsList[key]
-
+    let data = clientsList[key]
+    data.type = 'owner'
     setOpen(true)
     setForUpdate(true)
     setFormData(data)
@@ -96,6 +98,11 @@ function TableList(props) {
 
       }
     )
+  }
+
+  const onSubmit = (data) => {
+    console.log(data)
+    getAllUsers(pageNumber, pageSize, controller, data).then(res => console.log(res))
   }
 
   return (
@@ -121,24 +128,33 @@ function TableList(props) {
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <div>
-                <CustomInput
-                  formControlProps={{
-                    className: classes.margin + " " + classes.search
-                  }}
-                  inputProps={{
-                    placeholder: "البحث بإسم صاحب الملعب",
-                    inputProps: {
-                      "aria-label": "البحث بإسم صاحب الملعب"
-                    }
-                  }}
-                />
-                <SearchButton
-                  color="white"
-                  aria-label="edit"
-                  customClass={classes.margin + " " + classes.searchButton}
-                >
-                  <Search className={classes.searchIcon} />
-                </SearchButton>
+                <form onSubmit={handleSubmit(onSubmit)} >
+
+                  <RHFInput
+                    as={
+                      <CustomInput
+                        formControlProps={{
+                          className: classes.margin + " " + classes.search
+                        }}
+                        inputProps={{
+                          placeholder: "البحث بإسم صاحب الملعب",
+                          inputProps: {
+                            "aria-label": "البحث بإسم صاحب الملعب"
+                          }
+                        }}
+                      />}
+                    rules={{ required: true }}
+                    name="filter"
+                    register={register}
+                    setValue={setValue} />
+                  <SearchButton
+                    color="white"
+                    aria-label="edit"
+                    customClass={classes.margin + " " + classes.searchButton}
+                  >
+                    <Search className={classes.searchIcon} />
+                  </SearchButton>
+                </form>
                 <Table
                   showEditButton={true}
                   showDeleteButton={false}

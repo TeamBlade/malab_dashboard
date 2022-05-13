@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { Search } from "@material-ui/icons";
 import { CustomInput, IconButton as SearchButton } from "components";
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import { RHFInput } from 'react-hook-form-input';
+import { Controller, useForm } from "react-hook-form";
 
 const styles = theme => ({
   container: {
@@ -28,7 +30,10 @@ const styles = theme => ({
   searchIcon: headerLinksStyle.searchIcon
 });
 
-
+const searchStyle = {
+  maxWidth: '200px',
+  width: '200px'
+}
 function TableList(props) {
   const { classes } = props
   const [clientsList, setClientList] = useState([])
@@ -38,6 +43,7 @@ function TableList(props) {
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
   const [formData, setFormData] = useState(null)
+  const controller = new window.AbortController();
 
   const fetchData = (cancel) => {
     getAllUsers(pageNumber, pageSize, "user", cancel).then(data => {
@@ -52,10 +58,14 @@ function TableList(props) {
   }
 
   useEffect(() => {
-    const controller = new window.AbortController();
     fetchData(controller)
     return () => { controller.abort() }
   }, [pageNumber])
+
+  useEffect(() => {
+    fetchData(controller)
+    return () => { controller.abort() }
+  }, [])
 
   const refreshTable = () => {
 
@@ -65,6 +75,8 @@ function TableList(props) {
 
   const handleClose = () => {
     setOpen(false)
+    setForUpdate(false)
+    setFormData(null)
   }
   const nextPage = () => {
     setPageNumber(pageNumber + 1)
@@ -77,20 +89,27 @@ function TableList(props) {
 
 
   const handleEditClick = ({ prop, key }) => {
-    const data = clientsList[key]
+    let data = clientsList[key]
+    data.type = 'user'
     setOpen(true)
     setForUpdate(true)
     setFormData(data)
   }
-
+  const onSubmit = (data) => {
+    console.log(data)
+    getAllUsers(pageNumber, pageSize, controller, data).then(res => console.log(res))
+  }
+  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
   const handleDeleteClick = ({ prop, key }) => {
-    deleteUser(clientsList[key].id).then(
-      res => {
-        let list = tableRows.filter((_, i) => i !== key)
-        setTableRows(list)
+    const answer = window.confirm("هل أنت متأكد")
+    if (answer)
+      deleteUser(clientsList[key].id).then(
+        res => {
+          let list = tableRows.filter((_, i) => i !== key)
+          setTableRows(list)
 
-      }
-    )
+        }
+      )
   }
   const isAdmin = getUserState().isAdmin;
   if (isAdmin)
@@ -117,24 +136,13 @@ function TableList(props) {
               cardSubtitle="من الأحدث إلى الأقدم"
               content={
                 <div>
-                  <CustomInput
-                    formControlProps={{
-                      className: classes.margin + " " + classes.search
-                    }}
-                    inputProps={{
-                      placeholder: "البحث بإسم العميل",
-                      inputProps: {
-                        "aria-label": "البحث بإسم العميل"
-                      }
-                    }}
-                  />
-                  <SearchButton
-                    color="white"
-                    aria-label="edit"
-                    customClass={classes.margin + " " + classes.searchButton}
-                  >
-                    <Search className={classes.searchIcon} />
-                  </SearchButton>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <input type='text' className="form-control" style={searchStyle} {...register("filter", { required: true })}
+                      placeholder="البحث بإسم المدينة" />
+                    <button type='submit' className='btn btn-success'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg></button>
+                  </form>
                   <Table
                     showEditButton={true}
                     showDeleteButton={false}

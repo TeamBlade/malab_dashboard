@@ -12,6 +12,7 @@
     "chartist": "0.10.1",
     "classnames": "2.2.5",
     "dotenv": "^16.0.0",
+    "formik": "^2.2.9",
     "jss-rtl": "^0.2.3",
     "material-ui": "1.0.0-beta.41",
     "npm-run-all": "4.1.2",
@@ -25,7 +26,8 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "1.0.17",
     "react-select": "^2.4.4",
-    "react-swipeable-views": "0.12.12"
+    "react-swipeable-views": "0.12.12",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",
