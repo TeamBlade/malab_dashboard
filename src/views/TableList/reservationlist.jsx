@@ -126,33 +126,12 @@ function TableList({ ...props }) {
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <div>
-                <form onSubmit={handleSubmit(onSubmit)} >
-
-                  <RHFInput
-                    as={
-                      <CustomInput
-                        formControlProps={{
-                          className: classes.margin + " " + classes.search
-                        }}
-                        inputProps={{
-                          placeholder: "البحث بإسم صاحب الحجز",
-                          inputProps: {
-                            "aria-label": "البحث بإسم صاحب الحجز"
-                          }
-                        }}
-                      />}
-                    rules={{ required: true }}
-                    name="filter"
-                    register={register}
-                    setValue={setValue} />
-                  <SearchButton
-                    color="white"
-                    type='submit'
-                    aria-label="edit"
-                    customClass={classes.margin + " " + classes.searchButton}
-                  >
-                    <Search className={classes.searchIcon} />
-                  </SearchButton>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className='d-flex justify-content-start'>
+                    <input type='text' style={searchStyle}
+                      placeholder="البحث بإسم المدينة" />
+                    <button type='submit' className='btn btn-success'>بحث</button>
+                  </div>
                 </form>
                 <Table
                   hideEdit={true}

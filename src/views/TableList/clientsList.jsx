@@ -1,17 +1,15 @@
 import { withStyles } from '@material-ui/core/styles';
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { ItemGrid, RegularCard, Table } from "components";
+import { useFormik } from 'formik';
 import { Button, Grid } from "material-ui";
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Redirect } from 'react-router-dom';
 import ClientsForm from 'views/forms/clientsForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
 import { getUserState } from '../../state/user';
-import 'bootstrap/dist/css/bootstrap.rtl.min.css';
-import { Search } from "@material-ui/icons";
-import { CustomInput, IconButton as SearchButton } from "components";
-import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
-import { RHFInput } from 'react-hook-form-input';
-import { Controller, useForm } from "react-hook-form";
 
 const styles = theme => ({
   container: {
@@ -111,6 +109,15 @@ function TableList(props) {
         }
       )
   }
+  const formik = useFormik({
+    initialValues: {
+      filter: ''
+    },
+    onSubmit: (values) => {
+      getAllUsers(pageNumber, pageSize, 'user', controller, values.filter).then(res => console.log(res))
+
+    }
+  })
   const isAdmin = getUserState().isAdmin;
   if (isAdmin)
     return (
@@ -136,12 +143,12 @@ function TableList(props) {
               cardSubtitle="من الأحدث إلى الأقدم"
               content={
                 <div>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <input type='text' className="form-control" style={searchStyle} {...register("filter", { required: true })}
-                      placeholder="البحث بإسم المدينة" />
-                    <button type='submit' className='btn btn-success'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                    </svg></button>
+                  <form onSubmit={formik.handleSubmit}>
+                    <div className='d-flex justify-content-start'>
+                      <input type='text' style={searchStyle}
+                        placeholder="البحث بإسم المدينة" />
+                      <button type='submit' className='btn btn-success'>بحث</button>
+                    </div>
                   </form>
                   <Table
                     showEditButton={true}

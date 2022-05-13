@@ -100,10 +100,15 @@ function TableList(props) {
     )
   }
 
-  const onSubmit = (data) => {
-    console.log(data)
-    getAllUsers(pageNumber, pageSize, controller, data).then(res => console.log(res))
-  }
+  const formik = useFormik({
+    initialValues: {
+      filter: ''
+    },
+    onSubmit: (values) => {
+      getAllUsers(pageNumber, pageSize, 'user', controller, values.filter).then(res => console.log(res))
+
+    }
+  })
 
   return (
     <div>
@@ -128,32 +133,12 @@ function TableList(props) {
             cardSubtitle="من الأحدث إلى الأقدم"
             content={
               <div>
-                <form onSubmit={handleSubmit(onSubmit)} >
-
-                  <RHFInput
-                    as={
-                      <CustomInput
-                        formControlProps={{
-                          className: classes.margin + " " + classes.search
-                        }}
-                        inputProps={{
-                          placeholder: "البحث بإسم صاحب الملعب",
-                          inputProps: {
-                            "aria-label": "البحث بإسم صاحب الملعب"
-                          }
-                        }}
-                      />}
-                    rules={{ required: true }}
-                    name="filter"
-                    register={register}
-                    setValue={setValue} />
-                  <SearchButton
-                    color="white"
-                    aria-label="edit"
-                    customClass={classes.margin + " " + classes.searchButton}
-                  >
-                    <Search className={classes.searchIcon} />
-                  </SearchButton>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className='d-flex justify-content-start'>
+                    <input type='text' style={searchStyle}
+                      placeholder="البحث بإسم المدينة" />
+                    <button type='submit' className='btn btn-success'>بحث</button>
+                  </div>
                 </form>
                 <Table
                   showEditButton={true}
