@@ -136,6 +136,8 @@ function PlaygroundForm({ ...props }) {
             errors.price = 'Required'
         if (!values.type)
             errors.type = 'Required'
+        if (!selectedImages)
+            errors.images = 'Required'
         console.log(values.services)
         return errors
     }
@@ -214,7 +216,10 @@ function PlaygroundForm({ ...props }) {
                                     className='form-control hidden'
                                     id="imageUpload"
                                     multiple='multiple'
-                                    onChange={(e) => setselectedImages(e.target.files)}
+                                    onChange={(e) => {
+                                        console.log(e.target.files)
+                                        setselectedImages(e.target.files)
+                                    }}
                                 />
                                 <label htmlFor='imageUpload' className='btn btn-info'>إختر ملف صورة</label>
                             </div>

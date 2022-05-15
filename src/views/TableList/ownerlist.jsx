@@ -1,16 +1,13 @@
 import { withStyles } from '@material-ui/core/styles';
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { ItemGrid, RegularCard, Table } from "components";
+import { useFormik } from 'formik';
 import { Button, Grid } from "material-ui";
 import React, { useEffect, useState } from "react";
 import OwnersForm from 'views/forms/ownersForm';
 import { deleteUser, getAllUsers } from "../../api/admin";
-import 'bootstrap/dist/css/bootstrap.rtl.min.css';
-import './lists.css'
-import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
-import { CustomInput, IconButton as SearchButton } from "components";
-import { Search } from "@material-ui/icons";
-import { RHFInput } from 'react-hook-form-input';
-import { Controller, useForm } from "react-hook-form";
+import './lists.css';
 
 const styles = theme => ({
   container: {
@@ -30,6 +27,10 @@ const styles = theme => ({
 });
 
 
+const searchStyle = {
+  maxWidth: '200px',
+  width: '200px'
+}
 function TableList(props) {
   const { classes } = props
   const [clientsList, setClientList] = useState([])
@@ -42,7 +43,7 @@ function TableList(props) {
   const controller = new window.AbortController();
 
   const fetchData = (cancel) => {
-    getAllUsers(pageNumber, pageSize, "owner", cancel).then(data => {
+    getAllUsers(pageNumber, pageSize, "owner").then(data => {
       if (!data)
         data = []
       setClientList(data)
@@ -51,7 +52,6 @@ function TableList(props) {
       setTableRows(rows)
     })
   }
-  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
 
   useEffect(() => {
     fetchData(controller)
@@ -105,7 +105,15 @@ function TableList(props) {
       filter: ''
     },
     onSubmit: (values) => {
-      getAllUsers(pageNumber, pageSize, 'user', controller, values.filter).then(res => console.log(res))
+      getAllUsers(pageNumber, pageSize, 'owner', values.filter).then(res => {
+        if (res)
+          setClientList(res)
+        const rows = res.map(v => [v.firstName + " " + v.lastName, v.phone, v.city, v.email,])
+          ;
+        setTableRows(rows)
+
+        console.log(res)
+      })
 
     }
   })
@@ -136,6 +144,8 @@ function TableList(props) {
                 <form onSubmit={formik.handleSubmit}>
                   <div className='d-flex justify-content-start'>
                     <input type='text' style={searchStyle}
+                      onChange={formik.handleChange}
+                      name='filter'
                       placeholder="البحث بإسم المدينة" />
                     <button type='submit' className='btn btn-success'>بحث</button>
                   </div>

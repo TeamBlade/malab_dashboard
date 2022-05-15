@@ -83,7 +83,7 @@ function OwnersForm(props) {
       errors.email = 'Required'
     if (!values.phone)
       errors.phone = 'Required'
-    if (!values.password)
+    if (!values.password && !forUpdate)
       errors.password = 'Required'
     if (!selectedRow)
       errors.image = 'Required'
@@ -134,7 +134,8 @@ function OwnersForm(props) {
               </div>
             </div>
             <div className='col-md-6 col-sm-12'>
-              <div className="form-group">
+              <div className="d-flex flex-column">
+                <span>صورة الملعب</span>
                 <input
                   type="file"
                   name='image'

@@ -1,15 +1,11 @@
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { ItemGrid, RegularCard, Table } from "components";
 import { Button, Grid, withStyles } from 'material-ui';
 import React, { useEffect, useState } from "react";
 import ReservationsForm from 'views/forms/reservationForm';
 import { acceptBooking, getAllBooking, rejectBooking } from "../../api/booking";
 import { getUserState } from '../../state/user';
-import 'bootstrap/dist/css/bootstrap.rtl.min.css';
-import { Search } from "@material-ui/icons";
-import { CustomInput, IconButton as SearchButton } from "components";
-import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
-import { RHFInput } from 'react-hook-form-input';
-import { Controller, useForm } from "react-hook-form";
+import { useFormik } from 'formik'
 
 const styles = theme => ({
   container: {
@@ -23,6 +19,10 @@ const styles = theme => ({
   }
 });
 
+const searchStyle = {
+  maxWidth: '200px',
+  width: '200px'
+}
 
 function TableList({ ...props }) {
   const { classes } = props
@@ -46,7 +46,6 @@ function TableList({ ...props }) {
       setTableRows(rows)
     })
   }
-  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
 
   useEffect(() => {
     fetchData(controller)
@@ -100,8 +99,28 @@ function TableList({ ...props }) {
 
   const onSubmit = (data) => {
     console.log(data)
-    getAllBooking(pageNumber, pageSize, controller, data).then(res => console.log(res))
+    getAllBooking(pageNumber, pageSize, controller, data).then(res => {
+
+      console.log(res)
+    })
   }
+  const formik = useFormik({
+    initialValues: {
+      filter: ''
+    },
+    onSubmit: (values) => {
+      getAllBooking(pageNumber, pageSize, controller, values.filter).then(res => {
+        if (!res)
+          res = []
+        setReservationList(res)
+        const rows = res.map(v => [v.ref, v.startTime + " " + v.endTime, v.playground.name, v.playgroundOwner.firstName + " " + v.playgroundOwner.lastName, v.user.firstName + " " + v.user.lastName])
+          ;
+        setTableRows(rows)
+        console.log(res)
+      })
+
+    }
+  })
 
   return (
     <div>
@@ -129,7 +148,9 @@ function TableList({ ...props }) {
                 <form onSubmit={formik.handleSubmit}>
                   <div className='d-flex justify-content-start'>
                     <input type='text' style={searchStyle}
-                      placeholder="البحث بإسم المدينة" />
+                      onChange={formik.handleChange}
+                      name='filter'
+                      placeholder="البحث بإسم صاحب الحجز" />
                     <button type='submit' className='btn btn-success'>بحث</button>
                   </div>
                 </form>

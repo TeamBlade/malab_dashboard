@@ -4,7 +4,7 @@ async function getAllPlaygrounds(pageNumber, pageSize, signal, filter) {
   let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}`;
   if (filter) params = params + `&filter=${filter}`;
   try {
-    let resBody = await axios.get(`/Playgrounds?params`);
+    let resBody = await axios.get(`/Playgrounds?${params}`);
     return resBody;
   } catch (e) {}
 }
@@ -52,9 +52,11 @@ async function createPlayground(playground) {
   } catch (e) {}
 }
 
-async function getPlaygroundsByOwner(signal, ownerId) {
+async function getPlaygroundsByOwner(pageNumber, pageSize, filter) {
+  let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}`;
+  if (filter) params = params + `&filter=${filter}`;
   try {
-    const resBody = await axios.get(`/owners/playgrounds/`, { signal });
+    const resBody = await axios.get(`/owners/playgrounds/${params}`);
     return resBody;
   } catch (e) {}
 }

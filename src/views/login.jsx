@@ -1,10 +1,12 @@
 import { withStyles } from '@material-ui/core/styles';
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from 'react-router-dom';
 import { login } from "../api/users";
 import { setUserState } from '../state/user';
 import './login.css';
+import 'bootstrap/dist/css/bootstrap.rtl.min.css'
+import img from 'assets/img/_8.jpg'
 const styles = theme => ({
     container: {
         display: 'flex',
@@ -17,9 +19,23 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
+    body: {
+        backgroundImage: img,
+
+    }
+
 
 });
-
+const loginStyles = {
+    backgroundImage: "url(" + img + ")",
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    height: '100vh',
+    width: '100vw',
+    paddingLeft: 'calc(50vw - 120px)',
+    paddingRight: 'calc(50vw - 120px)',
+    paddingTop: 'calc(50vh - 180px)'
+}
 function Login({ ...props }) {
     const { show, classes, saveClick } = props
     const history = useHistory()
@@ -29,6 +45,7 @@ function Login({ ...props }) {
             password: ''
         }
     });
+    const [invalidLogin, setInvalidLogin] = useState(false)
     const onSubmit = data => {
         login(data).then(res => {
             if (res) {
@@ -45,15 +62,25 @@ function Login({ ...props }) {
                 history.push('/')
 
             }
-        }).catch(e => { })
+        }).catch(e => {
+            setInvalidLogin(true)
+        })
     }
 
     return (
-        <div className='container'>
+        <div div style={loginStyles}
+            dir='rtl'>
             <form onSubmit={handleSubmit(onSubmit)} id='login-form'>
-                <input type='text' ref={register} name='email' />
-                <input type='password' ref={register} name='password' />
-                <input type="submit" value="تسجيل الدخول" />
+                <div className='form-group'>
+                    <label htmlFor='username'>إسم المستحدم</label>
+                    <input type='text' id='username' className='form-control' ref={register} name='email' />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='password'></label>
+                    <input type='password' id='password' className='form-control' ref={register} name='password' />
+                </div>
+                {invalidLogin ? <span>كلمة المرور أو ‘سم المستخدم خطأ</span> : null}
+                <input type="submit" className='btn btn-success' value="تسجيل الدخول" />
             </form>
         </div>
     )

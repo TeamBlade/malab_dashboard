@@ -44,7 +44,7 @@ function TableList(props) {
   const controller = new window.AbortController();
 
   const fetchData = (cancel) => {
-    getAllUsers(pageNumber, pageSize, "user", cancel).then(data => {
+    getAllUsers(pageNumber, pageSize, "user").then(data => {
       if (!data)
         data = []
       setClientList(data)
@@ -93,11 +93,7 @@ function TableList(props) {
     setForUpdate(true)
     setFormData(data)
   }
-  const onSubmit = (data) => {
-    console.log(data)
-    getAllUsers(pageNumber, pageSize, controller, data).then(res => console.log(res))
-  }
-  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
+
   const handleDeleteClick = ({ prop, key }) => {
     const answer = window.confirm("هل أنت متأكد")
     if (answer)
@@ -114,7 +110,15 @@ function TableList(props) {
       filter: ''
     },
     onSubmit: (values) => {
-      getAllUsers(pageNumber, pageSize, 'user', controller, values.filter).then(res => console.log(res))
+      console.log(values)
+      getAllUsers(pageNumber, pageSize, 'user', values.filter).then(res => {
+        if (res)
+          setClientList(res)
+        const rows = res.map(v => [v.firstName + " " + v.lastName, v.phone, v.city, v.email,])
+          ;
+        setTableRows(rows)
+        console.log(res)
+      })
 
     }
   })
@@ -146,6 +150,8 @@ function TableList(props) {
                   <form onSubmit={formik.handleSubmit}>
                     <div className='d-flex justify-content-start'>
                       <input type='text' style={searchStyle}
+                        onChange={formik.handleChange}
+                        name='filter'
                         placeholder="البحث بإسم المدينة" />
                       <button type='submit' className='btn btn-success'>بحث</button>
                     </div>

@@ -1,16 +1,13 @@
 import { withStyles } from '@material-ui/core/styles';
+import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import 'bootstrap/dist/css/bootstrap.rtl.min.css';
 import { ItemGrid, RegularCard, Table } from "components";
 import { Button, Grid } from "material-ui";
 import React, { useEffect, useState } from "react";
+import PlaygroundsForm from 'views/forms/playgroundForm';
 import { deletePlayground, getAllPlaygrounds, getPlaygroundsByOwner } from '../../api/playgrounds';
 import { getUserState } from '../../state/user';
-import PlaygroundsForm from 'views/forms/playgroundForm'
-import 'bootstrap/dist/css/bootstrap.rtl.min.css';
-import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
-import { CustomInput, IconButton as SearchButton } from "components";
-import { Search } from "@material-ui/icons";
-import { RHFInput } from 'react-hook-form-input';
-import { Controller, useForm } from "react-hook-form";
+import { useFormik } from 'formik';
 
 const styles = theme => ({
   container: {
@@ -28,6 +25,10 @@ const styles = theme => ({
   searchIcon: headerLinksStyle.searchIcon
 });
 
+const searchStyle = {
+  maxWidth: '200px',
+  width: '200px'
+}
 const TableList = ({ ...props }) => {
   const { classes } = props
 
@@ -49,15 +50,14 @@ const TableList = ({ ...props }) => {
   }
   const fetchData = (signal) => {
     if (getUserState().isAdmin)
-      getAllPlaygrounds(pageNumber, pageSize, signal).then(data => {
+      getAllPlaygrounds(pageNumber, pageSize).then(data => {
         loadData(data)
       });
     else {
-      getPlaygroundsByOwner(signal, getUserState().id).then(data => loadData(data))
+      getPlaygroundsByOwner(pageNumber, pageSize).then(data => loadData(data))
     }
   }
 
-  const { control, setValue, register, handleSubmit, formState: { errors } } = useForm()
 
   useEffect(() => {
     fetchData(controller)
@@ -110,7 +110,7 @@ const TableList = ({ ...props }) => {
   const handleDeleteClick = ({ prop, key }) => {
     const answer = window.confirm("هل أنت متأكد")
     if (answer)
-      deletePlayground(playgroundsList[key].id).then(
+      deletePlayground(playgroundsList[key]._id).then(
         res => {
           let list = tableRows.filter((_, i) => i !== key)
           setTableRows(list)
@@ -118,10 +118,27 @@ const TableList = ({ ...props }) => {
         }
       )
   }
-  const onSubmit = (data) => {
-    console.log(data)
-    getAllPlaygrounds(pageNumber, pageSize, controller, data).then(res => console.log(res))
-  }
+
+  const formik = useFormik({
+    initialValues: {
+      filter: ''
+    },
+    onSubmit: (values) => {
+      console.log(values.filter)
+      if (getUserState().isAdmin)
+        getAllPlaygrounds(pageNumber, pageSize, values.filter).then(res => {
+          loadData(res)
+          console.log(res)
+        })
+      else {
+        getPlaygroundsByOwner(pageNumber, pageSize, values.filter).then(res => {
+          loadData(res)
+        })
+      }
+
+    }
+  })
+
   return (
     <div>
       <Grid container>
@@ -147,7 +164,9 @@ const TableList = ({ ...props }) => {
                 <form onSubmit={formik.handleSubmit}>
                   <div className='d-flex justify-content-start'>
                     <input type='text' style={searchStyle}
-                      placeholder="البحث بإسم المدينة" />
+                      onChange={formik.handleChange}
+                      name='filter'
+                      placeholder="البحث بإسم صاحب الملعب" />
                     <button type='submit' className='btn btn-success'>بحث</button>
                   </div>
                 </form>
