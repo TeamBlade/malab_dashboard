@@ -16,7 +16,7 @@ import {
   Accessibility
 } from "@material-ui/icons";
 import { withStyles, Grid } from "material-ui";
-
+import { Link } from 'react-router-dom'
 import {
   StatsCard,
   ChartCard,
@@ -91,50 +91,60 @@ function Dashboard(props) {
     <div>
       <Grid container>
         <ItemGrid xs={12} sm={6} md={3}>
-          <StatsCard
-            icon={Person}
-            iconColor="orange"
-            title="اصحاب الملاعب"
-            description={ownersCount}
-            small="صاحب ملعب"
-            statIcon={DateRange}
-            statIconColor="danger"
-            statText="تم انضمام 3 من اصحاب الملاعب اليوم"
+          <Link to='/owners'>
+            <StatsCard
+              icon={Person}
+              iconColor="orange"
+              title="اصحاب الملاعب"
+              description={ownersCount}
+              small="صاحب ملعب"
+              statIcon={DateRange}
+              statIconColor="danger"
+              statText="تم انضمام 3 من اصحاب الملاعب اليوم"
 
-          />
+            />
+          </Link>
         </ItemGrid>
         <ItemGrid xs={12} sm={6} md={3}>
-          <StatsCard
-            icon={Store}
-            iconColor="green"
-            title="الملاعب"
-            description={playgroundsCount}
-            small="ملعب"
-            statIcon={DateRange}
-            statText="تم اضافه 5 ملاعب جدد"
-          />
+          <Link to='playgrounds'>
+
+            <StatsCard
+              icon={Store}
+              iconColor="green"
+              title="الملاعب"
+              description={playgroundsCount}
+              small="ملعب"
+              statIcon={DateRange}
+              statText="تم اضافه 5 ملاعب جدد"
+            />
+          </Link>
         </ItemGrid>
         <ItemGrid xs={12} sm={6} md={3}>
-          <StatsCard
-            icon={Accessibility}
-            iconColor="red"
-            title="العملاء "
-            description={clientsCount}
-            small="عميل"
-            statIcon={LocalOffer}
-            statText="تم انضمام 3 من  المستخدمين الجدد اليوم"
-          />
+          <Link to='/clients'>
+            <StatsCard
+              icon={Accessibility}
+              iconColor="red"
+              title="العملاء "
+              description={clientsCount}
+              small="عميل"
+              statIcon={LocalOffer}
+              statText="تم انضمام 3 من  المستخدمين الجدد اليوم"
+            />
+          </Link>
         </ItemGrid>
         <ItemGrid xs={12} sm={6} md={3}>
-          <StatsCard
-            icon={InfoOutline}
-            iconColor="blue"
-            title="الحجوازت"
-            description={reservationsCount}
-            small="حجز"
-            statIcon={Update}
-            statText="تم حجز 3 من الملاعب اليوم"
-          />
+          <Link to='/reservations'>
+
+            <StatsCard
+              icon={InfoOutline}
+              iconColor="blue"
+              title="الحجوازت"
+              description={reservationsCount}
+              small="حجز"
+              statIcon={Update}
+              statText="تم حجز 3 من الملاعب اليوم"
+            />
+          </Link>
         </ItemGrid>
       </Grid>
       <Grid container>
