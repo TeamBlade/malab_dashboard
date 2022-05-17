@@ -22,11 +22,11 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use(
   function (response) {
-    console.log(response.data);
     if (response && response.data.status === "success") {
-      console.log(response.data);
-      if (response.data.data) return response.data.data;
-      else return [];
+      if (response.data.data || response.data.data == 0) {
+        console.log(response.data);
+        return response.data.data;
+      } else return [];
     } else {
       console.error(response.data);
       return [];

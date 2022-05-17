@@ -57,8 +57,6 @@ function PlaygroundForm({ ...props }) {
 
     }
     const onSubmit = _data => {
-        console.log(_data)
-        console.log('forupdate', forUpdate)
         const formData = new FormData();
         for (const key of Object.keys(selectedImages))
             formData.append("images", selectedImages[key]);
@@ -86,13 +84,11 @@ function PlaygroundForm({ ...props }) {
                 start: _data.nightStartTime,
                 end: _data.nightEndTime
             }))
-            console.log('true')
             updatePlayground(formData).then(res => {
                 refreshTable()
                 handleClose()
             }).catch(e => {
                 handleClose()
-                console.log(e)
             })
         }
         else {
@@ -105,6 +101,7 @@ function PlaygroundForm({ ...props }) {
                 end: _data.nightEndTime
             }))
             createPlayground(formData).then(res => {
+                console.log('play', res)
                 refreshTable()
                 handleClose()
             })
@@ -145,7 +142,6 @@ function PlaygroundForm({ ...props }) {
         validate: validate,
         initialValues: defaultValues,
         onSubmit: values => {
-            console.log(values)
             onSubmit(values)
         },
     });

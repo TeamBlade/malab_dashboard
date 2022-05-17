@@ -1,34 +1,72 @@
-* {
-  box-sizing: content-box;
+#login-page *,
+#login-page *:before,
+#login-page *:after {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+}
+#login-page form {
+  height: 520px;
+  width: 400px;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+}
+#login-page form * {
+  font-family: "Poppins", sans-serif;
+  color: #000000;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
 }
 
-.container {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  padding: 0;
-  background-position: center;
-  justify-content: center;
-  align-items: center;
+#login-page form h3 {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: center;
 }
 
-#login-form {
-  width: 240px;
-  height: 360px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 2px 2px 8px #888888;
-  background: rgb(255, 255, 255, 0.5);
-  padding: 0 !important;
-  margin: 0 !important;
+#login-page label {
+  display: block;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 500;
+}
+#login-page input {
+  display: block;
+  height: 50px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 300;
 }
 
-#login-form input {
-  height: 2rem;
-  margin-bottom: 1.5rem;
+#login-page ::placeholder {
+  color: #1b1b1b;
+}
+
+#login-page button {
+  width: 100%;
+  background-color: #0b800b;
+  color: #fff;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#password {
+  margin-bottom: 50px;
 }

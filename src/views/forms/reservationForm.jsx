@@ -61,7 +61,6 @@ function ReservationForm({ ...props }) {
             errors.endTime = 'Required'
         if (!values.date)
             errors.date = 'Required'
-        console.log(errors, values)
         return errors;
     }
     const formik = useFormik({

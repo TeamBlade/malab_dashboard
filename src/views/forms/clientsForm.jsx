@@ -83,11 +83,12 @@ function ClientForm(props) {
       errors.email = 'Required'
     if (!values.phone)
       errors.phone = 'Required'
+    if (values.phone.length < 12)
+      errors.phone = 'length'
     if (!values.password && !forUpdate)
       errors.password = 'Required'
     if (!selectedRow)
       errors.image = 'Required'
-    console.log(errors)
     return errors
   }
   const formik = useFormik({
@@ -173,7 +174,7 @@ function ClientForm(props) {
                   onChange={formik.handleChange}
                   value={formik.values.phone}
                   className="form-control" id="phone" placeholder="رقم الهاتف" />
-                {formik.errors.phone && formik.touched.phone ? <span>هذا الحقل مطلوب</span> : null}
+                {formik.errors.phone && formik.touched.phone ? formik.errors.phone == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول الهاتف يجب أن لا يقل عن 12 خانة</span> : null}
 
               </div>
             </div>
@@ -198,7 +199,7 @@ function ClientForm(props) {
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     className="form-control" id="password" placeholder="كلمة المرور" />
-                  {formik.errors.password && formik.touched.password ? <span>هذا الحقل مطلوب</span> : null}
+                  {formik.errors.password && formik.touched.password ? formik.errors.password == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول كلمة المرور يجب أن لا يقل عن 12 خانة</span> : null}
 
                 </div>
               </div> : <div></div>

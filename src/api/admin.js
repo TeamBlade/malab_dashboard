@@ -2,7 +2,6 @@ import axios from "axios";
 
 async function getAllUsers(pageNumber, pageSize, type, filter) {
   let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}&type=${type}`;
-  console.log("filter", filter);
   if (filter) params = params + `&filter=${filter}`;
 
   try {
@@ -13,7 +12,7 @@ async function getAllUsers(pageNumber, pageSize, type, filter) {
 
 async function getPenddingUsers() {
   try {
-    const res = await axios.get('/v2/admin/clients/?status="pendding"');
+    const res = await axios.get('/v2/admin/clients/?status="pending"');
   } catch (e) {}
 }
 async function addUser(user) {
@@ -40,4 +39,18 @@ async function deleteUser(id) {
   } catch (e) {}
 }
 
-export { getAllUsers, addUser, updateUser, deleteUser };
+async function getUserCount(type) {
+  try {
+    const res = await axios.get(`/admin/users/count/${type}`);
+    return res;
+  } catch (e) {}
+}
+
+export {
+  getAllUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  getPenddingUsers,
+  getUserCount,
+};

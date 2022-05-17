@@ -33,23 +33,26 @@ function TableList({ ...props }) {
   const [formData, setFormData] = useState(null)
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
-  const controller = new window.AbortController();
+  let componentActive = true;
 
   const showBookingActions = getUserState().isAdmin
   const fetchData = (signal) => {
-    getAllBooking(pageNumber, pageSize, signal).then(data => {
+    getAllBooking(pageNumber, pageSize).then(data => {
       if (!data)
         data = []
-      setReservationList(data)
-      const rows = data.map(v => [v.ref, v.startTime + " " + v.endTime, v.playground.name, v.playgroundOwner.firstName + " " + v.playgroundOwner.lastName, v.user.firstName + " " + v.user.lastName])
-        ;
-      setTableRows(rows)
+      if (componentActive) {
+        console.log(data)
+        setReservationList(data)
+        const rows = data.map(v => [v.ref, v.startTime + " " + v.endTime, v.playground.name, v.playgroundOwner.firstName + " " + v.playgroundOwner.lastName, v.user.firstName + " " + v.user.lastName])
+        setTableRows(rows)
+      }
+
     })
   }
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [pageNumber])
 
   const refreshTable = () => {
@@ -57,11 +60,10 @@ function TableList({ ...props }) {
   }
 
   // form
-  const [initalFormData, setInitialFormData] = useState(null);
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [])
 
   const handleClose = () => {
@@ -90,26 +92,19 @@ function TableList({ ...props }) {
   }
   const handleAcceptClick = ({ prop, key }) => {
     const id = reservationList[key]._id
-    acceptBooking(id).then(res => { })
+    acceptBooking(id).then(res => { refreshTable() })
   }
   const handleRejectClick = ({ prop, key }) => {
     const id = reservationList[key]._id
-    rejectBooking(id).then(res => { })
+    rejectBooking(id).then(res => { refreshTable() })
   }
 
-  const onSubmit = (data) => {
-    console.log(data)
-    getAllBooking(pageNumber, pageSize, controller, data).then(res => {
-
-      console.log(res)
-    })
-  }
   const formik = useFormik({
     initialValues: {
       filter: ''
     },
     onSubmit: (values) => {
-      getAllBooking(pageNumber, pageSize, controller, values.filter).then(res => {
+      getAllBooking(pageNumber, pageSize, values.filter).then(res => {
         if (!res)
           res = []
         setReservationList(res)

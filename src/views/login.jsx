@@ -5,8 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { login } from "../api/users";
 import { setUserState } from '../state/user';
 import './login.css';
-import 'bootstrap/dist/css/bootstrap.rtl.min.css'
 import img from 'assets/img/_8.jpg'
+import { useFormik } from 'formik';
+
 const styles = theme => ({
     container: {
         display: 'flex',
@@ -28,39 +29,49 @@ const styles = theme => ({
 });
 const loginStyles = {
     backgroundImage: "url(" + img + ")",
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    height: '100vh',
     width: '100vw',
-    paddingLeft: 'calc(50vw - 120px)',
-    paddingRight: 'calc(50vw - 120px)',
-    paddingTop: 'calc(50vh - 180px)'
+    height: '100vh',
+    overflow: 'hidden',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover'
+
 }
 function Login({ ...props }) {
     const { show, classes, saveClick } = props
     const history = useHistory()
-    const { control, handleSubmit, register } = useForm({
-        defaultValues: {
+    const formik = useFormik({
+        initialValues: {
             email: '',
             password: ''
-        }
+        },
+        validate: (values, props) => {
+            const errors = {}
+            if (!values.email)
+                errors.email = 'Required'
+            if (!values.password)
+                errors.password = 'Required'
+            return errors
+        },
+        onSubmit: (values) => onSubmit(values)
     });
     const [invalidLogin, setInvalidLogin] = useState(false)
     const onSubmit = data => {
         login(data).then(res => {
-            if (res) {
+            if (Object.prototype.toString.call(res) === '[object Object]') {
                 setUserState({
                     id: res.id,
                     email: res.email,
                     type: res.type,
                     loggedIn: true,
-                    firstName: res.firstNamem,
+                    firstName: res.firstName,
                     lastName: res.lastName,
                     isAdmin: res.type === "admin",
                     token: res.token
                 })
                 history.push('/')
 
+            } else {
+                setInvalidLogin(true)
             }
         }).catch(e => {
             setInvalidLogin(true)
@@ -68,19 +79,18 @@ function Login({ ...props }) {
     }
 
     return (
-        <div div style={loginStyles}
-            dir='rtl'>
-            <form onSubmit={handleSubmit(onSubmit)} id='login-form'>
-                <div className='form-group'>
-                    <label htmlFor='username'>إسم المستحدم</label>
-                    <input type='text' id='username' className='form-control' ref={register} name='email' />
-                </div>
-                <div className='form-group'>
-                    <label htmlFor='password'></label>
-                    <input type='password' id='password' className='form-control' ref={register} name='password' />
-                </div>
-                {invalidLogin ? <span>كلمة المرور أو ‘سم المستخدم خطأ</span> : null}
-                <input type="submit" className='btn btn-success' value="تسجيل الدخول" />
+        <div style={loginStyles} id='login-page'>
+
+            <form dir='rtl' onSubmit={formik.handleSubmit}>
+                <h3>تسجيل الدخول</h3>
+
+                <label htmlFor="username">إسم المستحدم</label>
+                <input type="text" placeholder="إسم المستخدم" id="username" name='email' onChange={formik.handleChange} />
+                <label htmlFor="password">كلمة المرور</label>
+                <input type="password" placeholder="كلمة المرور" id="password" name="password" onChange={formik.handleChange} />
+                {(invalidLogin || formik.errors.email || formik.errors.password) ? <span>كلمة المرور أو ‘سم المستخدم خطأ</span> : null}
+
+                <button type='submit'>تسجيل الدخول</button>
             </form>
         </div>
     )

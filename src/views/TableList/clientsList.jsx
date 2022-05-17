@@ -41,28 +41,29 @@ function TableList(props) {
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
   const [formData, setFormData] = useState(null)
-  const controller = new window.AbortController();
+  let componentActive = true
 
   const fetchData = (cancel) => {
     getAllUsers(pageNumber, pageSize, "user").then(data => {
       if (!data)
         data = []
-      setClientList(data)
-      const rows = data.map(v => [v.firstName + " " + v.lastName, v.phone, v.city, v.email,])
-        ;
-      setTableRows(rows)
+      if (componentActive) {
+        setClientList(data)
+        const rows = data.map(v => [v.firstName + " " + v.lastName, v.phone, v.city, v.email,])
+        setTableRows(rows)
+      }
     })
 
   }
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [pageNumber])
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [])
 
   const refreshTable = () => {
@@ -110,14 +111,12 @@ function TableList(props) {
       filter: ''
     },
     onSubmit: (values) => {
-      console.log(values)
       getAllUsers(pageNumber, pageSize, 'user', values.filter).then(res => {
         if (res)
           setClientList(res)
         const rows = res.map(v => [v.firstName + " " + v.lastName, v.phone, v.city, v.email,])
           ;
         setTableRows(rows)
-        console.log(res)
       })
 
     }

@@ -39,14 +39,16 @@ const TableList = ({ ...props }) => {
   const [formData, setFormData] = useState(null)
   const [open, setOpen] = useState(false);
   const [forUpdate, setForUpdate] = useState(false);
-  const controller = new window.AbortController();
+  let componentActive = true;
   const loadData = (data) => {
     if (!data)
       data = []
-    let ref = 1;
-    const rows = data.map(v => [`${ref++}`, v.name, v.city, v.ownerName])
-    setTableRows(rows)
-    setPlaygroundlist(data)
+    if (componentActive) {
+      let ref = 1;
+      const rows = data.map(v => [`${ref++}`, v.name, v.city, v.ownerName])
+      setTableRows(rows)
+      setPlaygroundlist(data)
+    }
   }
   const fetchData = (signal) => {
     if (getUserState().isAdmin)
@@ -60,13 +62,13 @@ const TableList = ({ ...props }) => {
 
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [])
 
   useEffect(() => {
-    fetchData(controller)
-    return () => { controller.abort() }
+    fetchData(componentActive)
+    return () => { componentActive = false }
   }, [pageNumber])
 
   const refreshTable = () => {
@@ -124,11 +126,9 @@ const TableList = ({ ...props }) => {
       filter: ''
     },
     onSubmit: (values) => {
-      console.log(values.filter)
       if (getUserState().isAdmin)
         getAllPlaygrounds(pageNumber, pageSize, values.filter).then(res => {
           loadData(res)
-          console.log(res)
         })
       else {
         getPlaygroundsByOwner(pageNumber, pageSize, values.filter).then(res => {

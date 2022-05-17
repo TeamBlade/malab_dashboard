@@ -4,7 +4,7 @@ async function getAllPlaygrounds(pageNumber, pageSize, signal, filter) {
   let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}`;
   if (filter) params = params + `&filter=${filter}`;
   try {
-    let resBody = await axios.get(`/Playgrounds?${params}`);
+    let resBody = await axios.get(`/Playgrounds/${params}`);
     return resBody;
   } catch (e) {}
 }
@@ -63,10 +63,17 @@ async function getPlaygroundsByOwner(pageNumber, pageSize, filter) {
 
 async function getPendingPlaygrounds(id) {
   try {
-    let resBody = await axios.get(`/Playgrounds`);
+    let resBody = await axios.get(`/Playgrounds/`);
     let ref = 1;
     resBody = resBody.map((v) => [`${ref++}`, v.name, v.city, v.ownerName]);
     return resBody;
+  } catch (e) {}
+}
+
+async function getPlaygroundsCount() {
+  try {
+    const res = await axios.get("/Playgrounds/count");
+    return res;
   } catch (e) {}
 }
 
@@ -79,4 +86,5 @@ export {
   getPlaygroundsByOwner,
   getPlaygroundsDropdown,
   getPendingPlaygrounds,
+  getPlaygroundsCount,
 };

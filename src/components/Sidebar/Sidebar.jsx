@@ -12,10 +12,13 @@ import {
   ListItemText
 } from "material-ui";
 
-
+import { getUserState } from "../../state/user";
 import sidebarStyle from "assets/jss/material-dashboard-react/sidebarStyle.jsx";
 
 const Sidebar = ({ ...props }) => {
+  let user = getUserState()
+
+  const homeeLink = `http://localhost:3001/?userName=${user.firstName}&loggedIn=true`
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
     return props.location.pathname.indexOf(routeName) > -1 ? true : false;
@@ -55,7 +58,7 @@ const Sidebar = ({ ...props }) => {
   );
   var brand = (
     <div className={classes.logo}>
-      <a href="http://localhost:3001" className={classes.logoLink}>
+      <a href={homeeLink} className={classes.logoLink}>
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />
         </div>

@@ -9,7 +9,9 @@ async function getOwnerById(id) {
 
 async function getPendingOwners() {
   try {
-    let resBody = await axios.get(`/Cities/?status="pendding"`);
+    let resBody = await axios.get(
+      `/v2/admin/clients/?type=owner&status=pending`
+    );
     let ref = 1;
     resBody = resBody.map((v) => [
       `${ref++}`,

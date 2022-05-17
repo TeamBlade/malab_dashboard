@@ -2,8 +2,7 @@ import axios from "axios";
 
 async function getAllBooking(pageNumber, pageSize, filter) {
   let params = `?pageSize=${pageSize}&pageNumber=${pageNumber}`;
-  if(filter)
-    params = params + `&filter=${filter}`
+  if (filter) params = params + `&filter=${filter}`;
   try {
     const resBody = await axios.get(`/booking?${params}`);
     return resBody;
@@ -51,7 +50,7 @@ async function acceptBooking(id) {
 
 async function rejectBooking(id) {
   try {
-    const res = axios.get("/owners/booking/reject/" + id);
+    const res = axios.get("/owners/booking/cancel/" + id);
     return res;
   } catch (e) {}
 }
@@ -59,6 +58,13 @@ async function rejectBooking(id) {
 async function getBookingByOwner(ownerId) {
   try {
     const res = axios.get("/owners/playgrounds/");
+    return res;
+  } catch (e) {}
+}
+
+async function getBookingCount() {
+  try {
+    const res = axios.get("/owners/booking/count");
     return res;
   } catch (e) {}
 }
@@ -72,4 +78,5 @@ export {
   createBooking,
   acceptBooking,
   rejectBooking,
+  getBookingCount,
 };
