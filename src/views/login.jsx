@@ -88,7 +88,7 @@ function Login({ ...props }) {
                 <input type="text" placeholder="إسم المستخدم" id="username" name='email' onChange={formik.handleChange} />
                 <label htmlFor="password">كلمة المرور</label>
                 <input type="password" placeholder="كلمة المرور" id="password" name="password" onChange={formik.handleChange} />
-                {(invalidLogin || formik.errors.email || formik.errors.password) ? <span>كلمة المرور أو ‘سم المستخدم خطأ</span> : null}
+                {(invalidLogin || formik.errors.email || formik.errors.password) && (formik.touched.email && formik.touched.password) ? <span>كلمة المرور أو ‘سم المستخدم خطأ</span> : null}
 
                 <button type='submit'>تسجيل الدخول</button>
             </form>

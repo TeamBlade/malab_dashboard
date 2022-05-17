@@ -75,8 +75,12 @@ function ClientForm(props) {
     const errors = {}
     if (!values.firstName)
       errors.firstName = 'Required'
+    if (values.firstName && values.firstName.length < 3)
+      errors.firstName = 'length'
     if (!values.lastName)
       errors.lastName = 'Required'
+    if (values.lastName && values.lastName.length < 3)
+      errors.lastName = 'length'
     if (!values.city)
       errors.city = 'Required'
     if (!values.email)
@@ -87,6 +91,8 @@ function ClientForm(props) {
       errors.phone = 'length'
     if (!values.password && !forUpdate)
       errors.password = 'Required'
+    if (values.password && !forUpdate && values.password.length < 6)
+      errors.password = 'length'
     if (!selectedRow)
       errors.image = 'Required'
     return errors
@@ -120,7 +126,7 @@ function ClientForm(props) {
                   onChange={formik.handleChange}
                   value={formik.values.firstName}
                   className="form-control" id="firstName" placeholder="الإسم الأول" />
-                {formik.errors.firstName && formik.touched.firstName ? <span>هذا الحقل مطلوب</span> : null}
+                {formik.errors.firstName && formik.touched.firstName ? formik.errors.firstName == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول الإسم يجب أن لا يقل عن 3 خانة</span> : null}
               </div>
             </div>
             <div className='col-md-6 col-sm-12'>
@@ -131,7 +137,7 @@ function ClientForm(props) {
                   onChange={formik.handleChange}
                   value={formik.values.lastName}
                   className="form-control" id="lastName" placeholder="الإسم الأخير" />
-                {formik.errors.lastName && formik.touched.lastName ? <span>هذا الحقل مطلوب</span> : null}
+                {formik.errors.lastName && formik.touched.lastName ? formik.errors.lastName == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول الإسم يجب أن لا يقل عن 3 خانة</span> : null}
 
               </div>
             </div>
@@ -145,7 +151,6 @@ function ClientForm(props) {
                   id="imageUpload"
                   onChange={(e) => {
                     e.preventDefault()
-                    console.log(e.target)
                     formik.setFieldValue('image', e.target.files[0].filename)
                     setSelectedRow(e.target.files[0])
                   }}
@@ -199,7 +204,7 @@ function ClientForm(props) {
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     className="form-control" id="password" placeholder="كلمة المرور" />
-                  {formik.errors.password && formik.touched.password ? formik.errors.password == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول كلمة المرور يجب أن لا يقل عن 12 خانة</span> : null}
+                  {formik.errors.password && formik.touched.password ? formik.errors.password == 'Required' ? <span>هذا الحقل مطلوب</span> : <span>طول كلمة المرور يجب أن لا يقل عن 6 خانة</span> : null}
 
                 </div>
               </div> : <div></div>
